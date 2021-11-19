@@ -1,0 +1,35 @@
+import MongoFunctions as mf
+from tkinter import *
+import tkinter.messagebox
+
+class CommandButtons:
+
+    def __init__(self, **kargs) -> None:
+        """Define commands to buttons OK, CLEAR and CLOSE.
+        """
+        self.kargs = kargs
+
+    def clear_widgets(self):
+        for frame in self.kargs['window'].children.values():
+            for widget in frame.children.values():
+                match widget.winfo_class():
+                    case 'TEntry':
+                        widget.delete(0, END)
+                    case 'TCombobox':
+                        widget.delete(0, END)
+                    case 'Listbox':
+                        widget.selection_clear(0, END)
+                    case 'Labelframe':
+                        for i in widget.children.values():
+                            i.delete("1.0", END)
+                    case _:
+                        pass
+    
+    def close_window(self):
+        self.kargs['window'].destroy()
+
+    def save_sheet(self, json_sheet: dict):
+        mf.MongoCRUD().insert_item(json_sheet)
+        self.clear_widgets()
+        tkinter.messagebox.showinfo(title='Comanda adicionada', message='Comanda adicionada com sucesso!')
+
