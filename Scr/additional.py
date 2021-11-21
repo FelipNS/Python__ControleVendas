@@ -85,8 +85,5 @@
         "Calda de Chocolate": True,
         "Calda de morango": True,
         "Calda de caramelo": True
-    },
-    {
-        "teste": True
-    } 
+    }
 ]

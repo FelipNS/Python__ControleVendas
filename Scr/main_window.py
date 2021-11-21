@@ -1,4 +1,5 @@
 from tkinter import *
+from tkinter.messagebox import showwarning
 import tkinter.ttk as ttk
 from MongoFunctions import *
 from TkinterFunctions import *
@@ -171,7 +172,7 @@ class ButtonAndObs(Header, Additionals):
     
         self.frame_buttons = ttk.Frame(self.root)
         self.button_ok = Button(self.frame_buttons, 
-            text='OK', 
+            text='SALVAR', 
             width=15, 
             height=2, 
             background='lime',
@@ -210,27 +211,38 @@ class ButtonAndObs(Header, Additionals):
         self.textbox_obs.grid(row=0, column=0, rowspan=11)
     
     def send_data(self):
-        json_datas = self._create_json(self.entry_sheet_number, self.combobox_combo_name, self.combobox_payment_option, self.entry_price, self.combobox_size, self.combobox_neighborwood)
-        for i in self.additionals_type:
-            json_datas[i] = self._create_dict_additionals(globals()[f'listbox_{i}'])
-        CommandButtons(window=self.root).save_sheet(json_datas)
+        json_datas = self._create_json(self.entry_sheet_number, self.combobox_combo_name, self.combobox_payment_option, self.entry_price, self.combobox_size, self.combobox_neighborwood, self.textbox_obs)
+        if json_datas != None:
+            for i in self.additionals_type:
+                json_datas[i] = self._create_dict_additionals(globals()[f'listbox_{i}'])
+            CommandButtons(window=self.root).save_sheet(json_datas)
     
-    def _create_json(self, number_sheet: ttk.Entry, combo: ttk.Combobox, payment_method: ttk.Combobox, price: ttk.Entry, size: ttk.Combobox, neighborwood: ttk.Combobox):
-        json_sketch = {
-            "n_comanda": number_sheet.get(),
-            "combo": combo.get(),
-            "f_pagamento": payment_method.get(),
-            "preco": price.get(),
-            "tamanho": size.get(),
-            "bairro": neighborwood.get()
-        }
-        return json_sketch
-    
+    def _create_json(self, number_sheet: ttk.Entry, combo: ttk.Combobox, payment_method: ttk.Combobox, price: ttk.Entry, size: ttk.Combobox, neighborwood: ttk.Combobox, obs: Text):
+        if self._is_empty(number_sheet, combo, payment_method, price, size, neighborwood):
+            showwarning('CAMPOS NÃO PREENCHIDOS', 'Exite um ou mais campos do cabeçalho em branco! Preencha-os e tente novamente.')
+        else:
+            json_sketch = {
+                "n_comanda": number_sheet.get(),
+                "combo": combo.get(),
+                "f_pagamento": payment_method.get(),
+                "preco": price.get(),
+                "tamanho": int(size.get().split(' ')[0]) if int(size.get().split(' ')[0]) != 1 else 1000,
+                "bairro": neighborwood.get(),
+                "obs": obs.get("1.0", END)
+            }
+            return json_sketch
+
+    def _is_empty(self, *args) -> bool:
+        isEmpty = False
+        for i in args:
+            if i.get() == '':
+                isEmpty = True
+        return isEmpty
+
     def _create_dict_additionals(self, listbox_name: Listbox):
         dict_temp = [listbox_name.get(i) for i in listbox_name.curselection()]
 
         return dict_temp
-
 
 if __name__ == '__main__':
     MainApp()
