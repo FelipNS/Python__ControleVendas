@@ -1,8 +1,8 @@
 from tkinter import *
 from tkinter.messagebox import showwarning
 import tkinter.ttk as ttk
-from MongoFunctions import *
-from TkinterFunctions import *
+from Scr.SheetWindow.MongoFunctions import MongoReadCollection
+from Scr.SheetWindow.TkinterFunctions import CommandButtons
 
 class MainApp(Tk):
     
@@ -10,29 +10,29 @@ class MainApp(Tk):
         super().__init__()
         
         self.title('Cadastro comandas')
-        self.configure(bg='#f1cbff')
-        
-        """width= 640
-        height = 720
-        x = self.winfo_screenwidth()
-        y = self.winfo_screenheight()
-        pos_x = int((x/2) - (width/2))
-        pos_y = int((y/2) - (height/2))
-        self.geometry(f'{width}x{height}+{pos_x}+{pos_y}')"""
-        
-        Header(self)
-        Additionals(self)
-        ButtonAndObs(self)
+        self.configure(bg='#ff80ff')
 
+        ButtonAndObs(self)
+        
+        self.update_idletasks()
+        w = self.winfo_reqwidth()
+        h = self.winfo_reqheight()
+        ws = self.winfo_screenwidth()
+        hs = self.winfo_screenheight()
+        x = int((ws/2) - (w/2))
+        y = int((hs/2) - (h/2))
+        self.geometry(f'{w}x{h}+{x}+{y}')
+        self.minsize(w, h)
+        self.maxsize(w, h)
+        
         self.styles = ttk.Style()
         self.styles.configure('.', font=('Apple LiGothic', 10, "bold"))
-        self.styles.configure('TLabel', background='#f1cbff')
+        self.styles.configure('TLabel', background='#ff80ff')
         self.styles.configure('left.TLabel', width=24)
         self.styles.configure('right.TLabel', width=11, padding=[180,0,0,0], anchor=E)
-        self.styles.configure('TFrame', background='#f1cbff')
+        self.styles.configure('TFrame', background='#ff80ff')
 
         self.mainloop()
-
 class Header:
 
     def __init__(self, master: Tk) -> None:
@@ -194,7 +194,7 @@ class ButtonAndObs(Header, Additionals):
         )
         self.label_obs = LabelFrame(self.frame_buttons, 
             text='Observações', 
-            bg='#f1cbff', 
+            bg='#ff80ff', 
             font=('Apple LiGothic', 15)
         )
         self.textbox_obs = Text(self.label_obs, 
@@ -243,6 +243,7 @@ class ButtonAndObs(Header, Additionals):
         dict_temp = [listbox_name.get(i) for i in listbox_name.curselection()]
 
         return dict_temp
+
 
 if __name__ == '__main__':
     MainApp()
