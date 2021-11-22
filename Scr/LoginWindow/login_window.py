@@ -1,7 +1,7 @@
 from tkinter import *
 import tkinter.ttk as ttk
 from tkinter.messagebox import showinfo
-from Scr.SheetWindow.main_window import MainApp
+from Scr.ProfileWindow.profile_window import ProfileApp
 import mysql.connector
 
 class MainLogin(Tk):
@@ -93,11 +93,15 @@ class AcessDB:
 
     def query_name(self, user, password):
 
-        cursor = self.conn.cursor()
-        cursor.execute(f'SELECT COUNT(*) FROM login_empregados WHERE nome_usuario = "{user}" AND senha_usuario = "{password}"')
+        cursor = self.conn.cursor(buffered=True)
+        cursor.execute(f'SELECT id_empregado FROM login_empregados WHERE nome_usuario = "{user}" AND senha_usuario = "{password}"')
 
-        if cursor.fetchone()[0] == 0:
+        if cursor.rowcount == 0:
             showinfo('USUÁRIO OU SENHA INCORRETA!', 'USUÁRIO OU SENHA INCORRETA!')
         else:
+            self.id_user = cursor.fetchone()[0]
+
+            cursor.close()
+            self.conn.close()
             self.root.destroy()
-            MainApp()
+            ProfileApp(self.id_user)
