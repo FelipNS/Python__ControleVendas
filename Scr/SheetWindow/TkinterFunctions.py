@@ -1,4 +1,5 @@
-import Scr.SheetWindow.MongoFunctions as mf
+import SheetWindow.MongoFunctions as mf
+import ProfileWindow as pw
 from tkinter import *
 import tkinter.messagebox
 
@@ -25,8 +26,10 @@ class CommandButtons:
                     case _:
                         pass
     
-    def close_window(self):
+    def close_window(self, id_user):
         self.kargs['window'].destroy()
+        pw.ProfileApp(id_user)
+        
 
     def save_sheet(self, json_sheet: dict):
         mf.MongoCRUD().insert_item(json_sheet)
