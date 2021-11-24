@@ -1,7 +1,7 @@
 from tkinter import *
 import tkinter.ttk as ttk
 from SheetWindow import MainApp
-import mysql.connector
+import ProfileWindow.TkFuncProfile as tkf
 
 class ProfileApp(Tk):
 
@@ -38,6 +38,7 @@ class WidgetsProfile:
     def __init__(self, master: Tk, id_user) -> None:
         self.root = master
         self.id_user = id_user
+        self.commands = tkf.CommandsButtons()
 
         self.str_id = StringVar()
         self.label_id = ttk.Label(self.root,
@@ -53,7 +54,7 @@ class WidgetsProfile:
         )
         self.button_new_sheet = ttk.Button(self.root,
             text='Cadastrar novas comandas',
-            command=lambda: self._open_sheet()
+            command=lambda: self.commands.open_sheet(self.root)
         )
         self.button_edit_data = ttk.Button(self.root,
             text='Editar dados',
@@ -72,19 +73,8 @@ class WidgetsProfile:
         self.button_new_sheet.grid(row=3, column=0, columnspan=3, sticky='we', padx=(20,20), pady=(0,10))
         self.button_edit_data.grid(row=4, column=0, columnspan=3, sticky='we', padx=(20,20), pady=(0,10))
 
-        self._colect_profile()
+        datas =self.commands.query_profile(id_user)
 
-    def _colect_profile(self):
-        self.conn = mysql.connector.connect(host='localhost', user='root', passwd='', database='acaiteria')
-
-        cursor = self.conn.cursor()
-        cursor.execute(f'SELECT E.id, E.primeiro_nome, E.sobrenome, P.nome FROM empregados E JOIN previlegios P ON E.id_previlegio = P.id AND E.id = {self.id_user};')
-
-        for id, first, last, level in cursor.fetchall():
-            self.str_id.set(f'Nº DE REGISTRO: {id}')
-            self.str_name.set(f'NOME: {first.upper()} {last.upper()}')
-            self.str_level.set(f'NÍVEL: {level}')        
-
-    def _open_sheet(self):
-        self.root.destroy()
-        MainApp(self.id_user)
+        self.str_id.set(f'Nº DE REGISTRO: {datas["id"]}')
+        self.str_name.set(f'NOME: {datas["name"]}')
+        self.str_level.set(f'NÍVEL: {datas["level"]}')

@@ -1,8 +1,8 @@
 from tkinter import *
 from tkinter.messagebox import showwarning
 import tkinter.ttk as ttk
-import SheetWindow.MongoFunctions as mf
-import SheetWindow.TkinterFunctions as tkf
+import SheetWindow.MongoFuncSheet as mf
+import SheetWindow.TkFuncSheet as tkf
 
 class MainApp(Tk):
     

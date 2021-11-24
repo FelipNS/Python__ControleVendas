@@ -1,4 +1,4 @@
-import SheetWindow.MongoFunctions as mf
+import SheetWindow.MongoFuncSheet as mf
 import ProfileWindow as pw
 from tkinter import *
 import tkinter.messagebox
