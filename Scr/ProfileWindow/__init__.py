@@ -1,6 +1,5 @@
 from tkinter import *
 import tkinter.ttk as ttk
-from SheetWindow import MainApp
 import ProfileWindow.TkFuncProfile as tkf
 
 class ProfileApp(Tk):
@@ -21,24 +20,15 @@ class ProfileApp(Tk):
 
         self.mainloop()
     
-    def set_geometry(master: Tk):
+    def set_geometry(master: Tk | Toplevel):
         master.update_idletasks()
-        w = master.winfo_reqwidth()
-        h = master.winfo_reqheight()
-        ws = master.winfo_screenwidth()
-        hs = master.winfo_screenheight()
-        x = int((ws/2) - (w/2))
-        y = int((hs/2) - (h/2))
-        master.geometry(f'{w}x{h}+{x}+{y}')
-        master.minsize(w, h)
-        master.maxsize(w, h)
-
+        master.eval('tk::PlaceWindow . center')
 class WidgetsProfile:
 
     def __init__(self, master: Tk, id_user) -> None:
         self.root = master
         self.id_user = id_user
-        self.commands = tkf.CommandsButtons()
+        self.commands = tkf.CommandsButtons(self.id_user, self.root)
 
         self.str_id = StringVar()
         self.label_id = ttk.Label(self.root,
@@ -58,6 +48,7 @@ class WidgetsProfile:
         )
         self.button_edit_data = ttk.Button(self.root,
             text='Editar dados',
+            command=lambda: self.commands.edit_datas()
         )
         self.button_alter_account = ttk.Button(self.root,
             text='Alterar conta',
@@ -73,7 +64,7 @@ class WidgetsProfile:
         self.button_new_sheet.grid(row=3, column=0, columnspan=3, sticky='we', padx=(20,20), pady=(0,10))
         self.button_edit_data.grid(row=4, column=0, columnspan=3, sticky='we', padx=(20,20), pady=(0,10))
 
-        datas =self.commands.query_profile(id_user)
+        datas = self.commands.query_profile()
 
         self.str_id.set(f'Nº DE REGISTRO: {datas["id"]}')
         self.str_name.set(f'NOME: {datas["name"]}')

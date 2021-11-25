@@ -15,15 +15,7 @@ class MainLogin(Tk):
         WidgetsLogin(self)
 
         self.update_idletasks()
-        w = self.winfo_reqwidth()
-        h = self.winfo_reqheight()
-        ws = self.winfo_screenwidth()
-        hs = self.winfo_screenheight()
-        x = int((ws/2) - (w/2))
-        y = int((hs/2) - (h/2))
-        self.geometry(f'{w}x{h}+{x}+{y}')
-        self.minsize(w, h)
-        self.maxsize(w, h)
+        self.eval('tk::PlaceWindow . center')
 
         self.styles = ttk.Style()
         self.styles.configure('.', background='#ff80ff')
@@ -94,7 +86,7 @@ class AcessDB:
     def query_name(self, user, password):
 
         cursor = self.conn.cursor(buffered=True)
-        cursor.execute(f'SELECT id_empregado FROM login_empregados WHERE nome_usuario = "{user}" AND senha_usuario = "{password}"')
+        cursor.execute(f'SELECT id_empregado FROM login_empregados WHERE BINARY nome_usuario = "{user}" AND BINARY senha_usuario = "{password}"')
 
         if cursor.rowcount == 0:
             showinfo('USUÁRIO OU SENHA INCORRETA!', 'USUÁRIO OU SENHA INCORRETA!')

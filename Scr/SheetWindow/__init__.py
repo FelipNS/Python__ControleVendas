@@ -15,15 +15,7 @@ class MainApp(Tk):
         ButtonAndObs(self, id_user)
         
         self.update_idletasks()
-        w = self.winfo_reqwidth()
-        h = self.winfo_reqheight()
-        ws = self.winfo_screenwidth()
-        hs = self.winfo_screenheight()
-        x = int((ws/2) - (w/2))
-        y = int((hs/2) - (h/2))
-        self.geometry(f'{w}x{h}+{x}+{y}')
-        self.minsize(w, h)
-        self.maxsize(w, h)
+        self.eval('tk::PlaceWindow . center')
         
         self.styles = ttk.Style()
         self.styles.configure('.', font=('Apple LiGothic', 10, "bold"))
