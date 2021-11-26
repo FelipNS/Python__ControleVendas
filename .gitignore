@@ -3,3 +3,5 @@ Scr/ProfileWindow/__pycache__
 Scr/SheetWindow/__pycache__
 Scr/config/__pycache__
 Scr/SupportFiles
+.vscode
+.pytest_cache

@@ -25,11 +25,11 @@ class MongoCRUD:
         self.collection.insert_one(document)
 
     def _format_date(self, date: str) -> str:
-        self.splited_date = date.split('-')
-        self.day_and_time = self.splited_date[2]
-        self.splited_date.pop(-1)
-        self.day_and_time = self.day_and_time.split(' ')
-        return f'{self.day_and_time[0]}/{self.splited_date[1]}/{self.splited_date[0]} {self.day_and_time[1][:8]}'
+        splited_date = date.split('-')
+        day_and_time = splited_date[2]
+        splited_date.pop(-1)
+        day_and_time = day_and_time.split(' ')
+        return f'{day_and_time[0]}/{splited_date[1]}/{splited_date[0]} {day_and_time[1][:8]}'
 
     def _print_sheet(self, filtered_list: list) -> None:
         for i in filtered_list:
@@ -41,11 +41,11 @@ class MongoCRUD:
                 print(f'{k}')
 
     def read_item(self, date = '') -> None:
-        self.cursor = self.collection.find({'date_time': {'$gte': date}})
-        self.registered = []
-        for i in self.cursor:
-            self.registered.append(i)
-        self._print_sheet(self.registered)
+        cursor = self.collection.find({'date_time': {'$gte': date}})
+        registered = []
+        for i in cursor:
+            registered.append(i)
+        self._print_sheet(registered)
     
     def update_item(self, filter: dict, new: dict) -> None:
         self.collection.update_one(filter, {"$set": new})
@@ -62,11 +62,11 @@ class MongoReadCollection:
         self.collection = self.db[collection_name]
 
     def read_item(self, _id: str) -> list:
-        self.cursor = self.collection.find({"_id": _id})
-        self.list_combos = []
-        for k in self.cursor[0].keys():
-            self.list_combos.append(k)
-        self.list_combos.remove('_id')
-        return self.list_combos
+        cursor = self.collection.find({"_id": _id})
+        list_combos = []
+        for k in cursor[0].keys():
+            list_combos.append(k)
+        list_combos.remove('_id')
+        return list_combos
 
     

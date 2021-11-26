@@ -1,6 +1,7 @@
 from tkinter import *
 import tkinter.ttk as ttk
 import ProfileWindow.TkFuncProfile as tkf
+import ProfileWindow.OtherWindows as ow
 from config.config import * 
 
 class ProfileApp(Tk):
@@ -11,7 +12,7 @@ class ProfileApp(Tk):
         self.title('PERFIL')
         self.configure(bg=DEFAUTL_BG_COLOR)
 
-        WidgetsProfile(self, id_user)
+        WindowLevelOne(self, id_user)
 
         self.eval(DEFAULT_WINDOW_POSITION)
 
@@ -20,7 +21,7 @@ class ProfileApp(Tk):
         self.styles.configure('TLabel', font=('Futura Gabriola Garamond', 10))
 
         self.mainloop()
-class WidgetsProfile:
+class WindowLevelOne:
 
     def __init__(self, master: Tk, id_user) -> None:
         self.root = master
@@ -41,7 +42,7 @@ class WidgetsProfile:
         )
         self.button_new_sheet = ttk.Button(self.root,
             text='Cadastrar novas comandas',
-            command=lambda: self.commands.open_sheet(self.root)
+            command=lambda: self.commands.open_sheet()
         )
         self.button_edit_data = ttk.Button(self.root,
             text='Editar dados',
@@ -49,9 +50,11 @@ class WidgetsProfile:
         )
         self.button_alter_account = ttk.Button(self.root,
             text='Alterar conta',
+            command=lambda: self.commands.return_login()
         )
         self.button_logout = ttk.Button(self.root,
             text='SAIR',
+            command=lambda: self.commands.exit_all()
         )
         
         self.label_id.grid(row=0, column=0, columnspan=2, sticky=W, padx=(20,20), pady=(20,10))
@@ -59,9 +62,17 @@ class WidgetsProfile:
         self.label_level.grid(row=2, column=0, columnspan=3, sticky=W, padx=(20,20), pady=(0,10))
         self.button_new_sheet.grid(row=3, column=0, columnspan=3, sticky='we', padx=(20,20), pady=(0,10))
         self.button_edit_data.grid(row=4, column=0, columnspan=3, sticky='we', padx=(20,20), pady=(0,10))
+        self.button_alter_account.grid(row=5, column=0, columnspan=3, sticky='we', padx=(20,20), pady=(0,10))
+        self.button_logout.grid(row=6, column=0, columnspan=3, sticky='we', padx=(20,20), pady=(0,10))
 
         datas = self.commands.query_profile()
 
         self.str_id.set(f'Nº DE REGISTRO: {datas["id"]}')
         self.str_name.set(f'NOME: {datas["name"]}')
         self.str_level.set(f'NÍVEL: {datas["level"]}')
+
+        match datas['level']:
+            case 'NIVEL II':
+                ow.WindowLevelTwo(self.root)
+            case 'NIVEL III', _:
+                ow.WindowLevelThree(self.root)

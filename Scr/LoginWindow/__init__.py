@@ -89,9 +89,9 @@ class AcessDB:
         if cursor.rowcount == 0:
             showinfo('USUÁRIO OU SENHA INCORRETA!', 'USUÁRIO OU SENHA INCORRETA!')
         else:
-            self.id_user = cursor.fetchone()[0]
+            id_user = cursor.fetchone()[0]
 
             cursor.close()
             self.conn.close()
             self.root.destroy()
-            ProfileApp(self.id_user)
+            ProfileApp(id_user)
