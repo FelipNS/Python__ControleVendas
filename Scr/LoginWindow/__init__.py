@@ -19,7 +19,6 @@ class MainLogin(Tk):
 
         self.styles = ttk.Style()
         self.styles.configure('.', background='#ff80ff')
-
         self.mainloop()
 
 
@@ -84,7 +83,6 @@ class AcessDB:
         self.conn = mysql.connector.connect(host='localhost', user='root', passwd='', database='acaiteria')
 
     def query_name(self, user, password):
-
         cursor = self.conn.cursor(buffered=True)
         cursor.execute(f'SELECT id_empregado FROM login_empregados WHERE BINARY nome_usuario = "{user}" AND BINARY senha_usuario = "{password}"')
 

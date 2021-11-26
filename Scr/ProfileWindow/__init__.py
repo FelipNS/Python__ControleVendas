@@ -1,6 +1,7 @@
 from tkinter import *
 import tkinter.ttk as ttk
 import ProfileWindow.TkFuncProfile as tkf
+from config.config import * 
 
 class ProfileApp(Tk):
 
@@ -8,21 +9,17 @@ class ProfileApp(Tk):
         super().__init__()
 
         self.title('PERFIL')
-        self.configure(bg='#ff80ff')
+        self.configure(bg=DEFAUTL_BG_COLOR)
 
         WidgetsProfile(self, id_user)
 
-        ProfileApp.set_geometry(self)
+        self.eval(DEFAULT_WINDOW_POSITION)
 
         self.styles = ttk.Style()
         self.styles.configure('.', background='#ff80ff')
         self.styles.configure('TLabel', font=('Futura Gabriola Garamond', 10))
 
         self.mainloop()
-    
-    def set_geometry(master: Tk | Toplevel):
-        master.update_idletasks()
-        master.eval('tk::PlaceWindow . center')
 class WidgetsProfile:
 
     def __init__(self, master: Tk, id_user) -> None:
@@ -56,7 +53,6 @@ class WidgetsProfile:
         self.button_logout = ttk.Button(self.root,
             text='SAIR',
         )
-
         
         self.label_id.grid(row=0, column=0, columnspan=2, sticky=W, padx=(20,20), pady=(20,10))
         self.label_name.grid(row=1, column=0, columnspan=3, sticky=W, padx=(20,20), pady=(0,10))

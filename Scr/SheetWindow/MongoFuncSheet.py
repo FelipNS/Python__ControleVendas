@@ -1,8 +1,6 @@
 import pymongo
 from pymongo import MongoClient
 from datetime import datetime
-
-
 class MongoCRUD:
 
     def __init__(self) -> None:
@@ -64,7 +62,6 @@ class MongoReadCollection:
         self.collection = self.db[collection_name]
 
     def read_item(self, _id: str) -> list:
-
         self.cursor = self.collection.find({"_id": _id})
         self.list_combos = []
         for k in self.cursor[0].keys():

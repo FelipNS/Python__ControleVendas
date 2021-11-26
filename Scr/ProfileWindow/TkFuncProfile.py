@@ -1,6 +1,7 @@
 from tkinter import *
 import tkinter.ttk as ttk
 import mysql.connector
+from config.config import *
 import SheetWindow as sw
 import ProfileWindow as pw
 
@@ -13,7 +14,6 @@ class CommandsButtons:
         self.cursor = self.conn.cursor()
 
     def query_profile(self) -> dict:
-
         self.cursor.execute(f'SELECT E.*, P.nome FROM empregados E INNER JOIN previlegios P ON E.id_previlegio = P.id AND E.id = {globals()["id_user"]};')
         self.dict_datas = dict()
 
@@ -24,51 +24,11 @@ class CommandsButtons:
             self.dict_datas['level'] = level
             self.dict_datas['nr_phone'] = nr_phone
             self.dict_datas['email'] = email
-        
         return self.dict_datas
 
     def edit_datas(self):
         self.master.destroy()
-        self.root_edit = Tk()
-        self.root_edit.configure(background='#ff80ff')
-
-        self.label_name = ttk.Label(self.root_edit,
-            text='Nome'
-        )
-        self.entry_name = Entry(self.root_edit,
-        )
-        self.label_phone = ttk.Label(self.root_edit,
-            text='Nº de celular'
-        )
-        self.entry_phone = Entry(self.root_edit,
-        )
-        self.entry_phone.bind("<KeyRelease>", self._format_number)
-        self.label_email = ttk.Label(self.root_edit,
-            text='Email'
-        )
-        self.entry_email = Entry(self.root_edit,
-        )
-        self.button_save = Button(self.root_edit,
-            text='Salvar',
-            bg='#19c406',
-            fg='white',
-            command=lambda: self._save_changes()
-        )
-        self.button_cancel = Button(self.root_edit,
-            text='Cancelar',
-            bg='#f50000',
-            fg='white',
-            command=lambda: self._return_profile()
-        )
-
-        pw.ProfileApp.set_geometry(self.root_edit)
-
-        self.styles = ttk.Style()
-        self.styles.configure('.', background='#ff80ff')
-        self.styles.configure('TLabel', font=('Futura Gabriola Garamond', 10))
-
         datas_profile = self.query_profile()
-
         name = datas_profile['name'].title()
         phone = list(datas_profile['nr_phone'])
         insert_char = ((0, '('), (3, ')'), (4, ' '), (6, ' '), (11, '-'))
@@ -77,19 +37,22 @@ class CommandsButtons:
         number = ''
         for i in phone:
             number += i
-        self.entry_name.insert(0, name) 
+        
+        #CREATE WINDOW's EDIT
+        WindowEdit()
+        self.entry_name = globals()['entry_name']
+        self.entry_phone = globals()['entry_phone']
+        self.entry_email = globals()['entry_email']
+        self.entry_name.insert(0, name)
         self.entry_phone.insert(0, number)
         self.entry_email.insert(0, datas_profile['email'])
 
-        self.label_name.grid(row=0, column=0, padx=(20,20), pady=(20,10), sticky=W)
-        self.entry_name.grid(row=1, column=0, padx=(20,20), pady=(0,10), sticky=W)
-        self.entry_phone.grid(row=2, column=0, padx=(20,20), pady=(0,10), sticky=W)
-        self.entry_email.grid(row=3, column=0, padx=(20,20), pady=(0,10), sticky=W)
-        self.button_save.grid(row=4, column=0, padx=(20,20), pady=(0,10), sticky=W)
-        self.button_cancel.grid(row=5, column=0, padx=(20,20), pady=(0,20), sticky=W)
+    def format_number(self, evt):
+        self.entry_name = globals()['entry_name']
+        self.entry_phone = globals()['entry_phone']
+        self.entry_email = globals()['entry_email']
 
-    def _format_number(self, evt):
-        ignore_key = list(i for i in range(32,256) if not i in range(48,58))       
+        ignore_key = list(i for i in range(32,256) if not i in range(48,58))
         number = self.entry_phone.get()
         number = list(number)
         number_for = ''
@@ -118,7 +81,11 @@ class CommandsButtons:
                 self.entry_phone.delete(0, END)
                 self.entry_phone.insert(0, number_for)
 
-    def _save_changes(self):
+    def save_changes(self):
+        self.entry_name = globals()['entry_name']
+        self.entry_phone = globals()['entry_phone']
+        self.entry_email = globals()['entry_email']
+
         name = self.entry_name.get()
         name = name.title().split(' ')
         first_name = name[0]
@@ -134,15 +101,76 @@ class CommandsButtons:
         sql = f'UPDATE empregados SET primeiro_nome = "{first_name}", sobrenome = "{last_name}", nr_celular = "{number}", email = "{email}" WHERE id = {globals()["id_user"]}'
         self.cursor.execute(sql)
         self.conn.commit()
-
-        self.root_edit.destroy()
+        self.master.destroy()
         pw.ProfileApp(globals()['id_user'])
 
-    def _return_profile(self):
-        self.root_edit.destroy()
+    def return_profile(self):
+        self.master.destroy()
         pw.ProfileApp(globals()['id_user'])
 
     def open_sheet(self, root):
         root.destroy()
         sw.MainApp(globals()['id_user'])
+
+
+class WindowEdit:
+
+    def __init__(self) -> None:
+        self.root_edit = Tk()
+        CB = CommandsButtons(globals()['id_user'], self.root_edit)
+        self.root_edit.configure(background=DEFAUTL_BG_COLOR)
+
+        self.label_name = ttk.Label(self.root_edit,
+            text='Nome'
+        )
+        self.entry_name = ttk.Entry(self.root_edit,
+            width=40,
+            font=('Futura Gabriola Garamond', 10)
+        )
+        self.label_phone = ttk.Label(self.root_edit,
+            text='Nº de celular'
+        )
+        self.entry_phone = ttk.Entry(self.root_edit,
+            width=40,
+            font=('Futura Gabriola Garamond', 10)
+        )
+        self.entry_phone.bind("<KeyRelease>", CB.format_number)
+        self.label_email = ttk.Label(self.root_edit,
+            text='Email'
+        )
+        self.entry_email = ttk.Entry(self.root_edit,
+            width=40,
+            font=('Futura Gabriola Garamond', 10)
+        )
+        self.button_save = Button(self.root_edit,
+            text='Salvar',
+            bg='#19c406',
+            fg='white',
+            command=lambda: CB.save_changes()
+        )
+        self.button_cancel = Button(self.root_edit,
+            text='Cancelar',
+            bg='#f50000',
+            fg='white',
+            command=lambda: CB.return_profile()
+        )
+
+        self.root_edit.eval(DEFAULT_WINDOW_POSITION)
+
+        self.styles = ttk.Style()
+        self.styles.configure('.', background='#ff80ff')
+        self.styles.configure('TLabel', font=('Futura Gabriola Garamond', 10))
+
+        self.label_name.grid(row=0, column=0, columnspan=2, padx=(20,20), pady=(20, 0), sticky=W)
+        self.entry_name.grid(row=1, column=0, columnspan=2, padx=(20,20), pady=(0,10), sticky=W)
+        self.label_phone.grid(row=2, column=0, columnspan=2, padx=(20,20), sticky=W)
+        self.entry_phone.grid(row=3, column=0, columnspan=2, padx=(20,20), pady=(0,10), sticky=W)
+        self.label_email.grid(row=4, column=0, columnspan=2, padx=(20,20), sticky=W)
+        self.entry_email.grid(row=5, column=0, columnspan=2, padx=(20,20), pady=(0,10), sticky=W)
+        self.button_save.grid(row=6, column=0, padx=(20,5), pady=(0,20), sticky='we')
+        self.button_cancel.grid(row=6, column=1, padx=(5,20), pady=(0,20), sticky='we')
+
+        globals()['entry_name']  = self.entry_name 
+        globals()['entry_phone']  = self.entry_phone 
+        globals()['entry_email']  = self.entry_email 
 

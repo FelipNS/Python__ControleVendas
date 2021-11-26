@@ -3,6 +3,7 @@ from tkinter.messagebox import showwarning
 import tkinter.ttk as ttk
 import SheetWindow.MongoFuncSheet as mf
 import SheetWindow.TkFuncSheet as tkf
+from config.config import *
 
 class MainApp(Tk):
     
@@ -10,12 +11,12 @@ class MainApp(Tk):
         super().__init__()
         
         self.title('Cadastro comandas')
-        self.configure(bg='#ff80ff')
+        self.configure(bg=DEFAUTL_BG_COLOR)
 
         ButtonAndObs(self, id_user)
         
         self.update_idletasks()
-        self.eval('tk::PlaceWindow . center')
+        self.eval(DEFAULT_WINDOW_POSITION)
         
         self.styles = ttk.Style()
         self.styles.configure('.', font=('Apple LiGothic', 10, "bold"))
@@ -23,7 +24,6 @@ class MainApp(Tk):
         self.styles.configure('left.TLabel', width=24)
         self.styles.configure('right.TLabel', width=11, padding=[180,0,0,0], anchor=E)
         self.styles.configure('TFrame', background='#ff80ff')
-
         self.mainloop()
 
 
@@ -85,7 +85,6 @@ class Header:
             width=22
         )
 
-        
         self.frame_header.grid(row=0, rowspan=4, column=0, columnspan=5, padx=(20,20), pady=(20,20))
         self.label_sheet_number.grid(row=0, column=0, pady=(0,2))
         self.entry_sheet_number.grid(row=0, column=1, pady=(0,2))
@@ -105,7 +104,6 @@ class Additionals:
 
     def __init__(self, master: Tk) -> None:
         self.root = master
-
         self.additionals_type = ['cereais', 'chocolates', 'coberturas', 'derivados do leite', 'diversos', 'frutas']
 
         for i in range(0,len(self.additionals_type)):
@@ -163,7 +161,7 @@ class ButtonAndObs(Header, Additionals):
     def __init__(self, master: Tk, id_user) -> None:
         Header.__init__(self, master)
         Additionals.__init__(self, master)
-    
+        self.id_user = id_user
         self.frame_buttons = ttk.Frame(self.root)
         self.button_ok = Button(self.frame_buttons, 
             text='SALVAR', 
@@ -177,7 +175,7 @@ class ButtonAndObs(Header, Additionals):
             width=15, 
             height=2, 
             background='red',
-            command=lambda: tkf.CommandButtons(window=self.root).close_window(id_user)
+            command=lambda: tkf.CommandButtons(window=self.root).close_window(self.id_user)
         )
         self.button_clear = Button(self.frame_buttons, 
             text='Limpar', 
@@ -222,7 +220,8 @@ class ButtonAndObs(Header, Additionals):
                 "preco": price.get(),
                 "tamanho": int(size.get().split(' ')[0]) if int(size.get().split(' ')[0]) != 1 else 1000,
                 "bairro": neighborwood.get(),
-                "obs": obs.get("1.0", END)
+                "obs": obs.get("1.0", END),
+                "seller": self.id_user
             }
             return json_sketch
 
@@ -235,9 +234,4 @@ class ButtonAndObs(Header, Additionals):
 
     def _create_dict_additionals(self, listbox_name: Listbox):
         dict_temp = [listbox_name.get(i) for i in listbox_name.curselection()]
-
         return dict_temp
-
-
-if __name__ == '__main__':
-    MainApp()
