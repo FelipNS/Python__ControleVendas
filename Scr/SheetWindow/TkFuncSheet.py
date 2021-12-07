@@ -4,7 +4,7 @@ from tkinter import *
 import tkinter.messagebox
 
 class CommandButtons:
-
+    
     def __init__(self, **kargs) -> None:
         """Define commands to buttons OK, CLEAR and CLOSE.
         """
@@ -29,7 +29,6 @@ class CommandButtons:
     def close_window(self, id_user):
         self.kargs['window'].destroy()
         pw.ProfileApp(id_user)
-        
 
     def save_sheet(self, json_sheet: dict):
         mf.MongoCRUD().insert_item(json_sheet)

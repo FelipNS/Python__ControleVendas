@@ -1,7 +1,8 @@
 from tkinter import *
 import tkinter.ttk as ttk
-from tkinter.messagebox import showinfo
+from tkinter.messagebox import askyesno, showinfo
 from ProfileWindow import ProfileApp
+from config.config import *
 import mysql.connector
 
 class MainLogin(Tk):
@@ -10,24 +11,15 @@ class MainLogin(Tk):
         super().__init__()
 
         self.title('LOGIN')
-        self.configure(bg='#ff80ff')
+        self.configure(bg=PRIMARY_BG_COLOR)
   
         WidgetsLogin(self)
 
         self.update_idletasks()
-        w = self.winfo_reqwidth()
-        h = self.winfo_reqheight()
-        ws = self.winfo_screenwidth()
-        hs = self.winfo_screenheight()
-        x = int((ws/2) - (w/2))
-        y = int((hs/2) - (h/2))
-        self.geometry(f'{w}x{h}+{x}+{y}')
-        self.minsize(w, h)
-        self.maxsize(w, h)
+        self.eval(DEFAULT_WINDOW_POSITION)
 
         self.styles = ttk.Style()
-        self.styles.configure('.', background='#ff80ff')
-
+        self.styles.configure('TLabel', background=PRIMARY_BG_COLOR, foreground=DEFAULT_FG_COLOR)
         self.mainloop()
 
 
@@ -40,7 +32,7 @@ class WidgetsLogin:
             text='LOGIN', 
             font=('Futura Gabriola Garamond', 18, "bold"),
             width=15,
-            anchor=CENTER
+            anchor=CENTER,
         )
         self.label_username = ttk.Label(self.root, 
             text='USUÁRIO', 
@@ -57,15 +49,20 @@ class WidgetsLogin:
         )
         self.value_checkbox = BooleanVar()
         self.checkbox_hidden_pwd = Checkbutton(self.root,
-            bg='#ff80ff',
+            bg=PRIMARY_BG_COLOR,
+            fg=DEFAULT_FG_COLOR,
             text='Mostrar senha',
-            activebackground='#ff80ff',
+            activebackground=PRIMARY_BG_COLOR,
             variable=self.value_checkbox,
             command=lambda: self._hidden_show_pwd()
         )
         self.button_ok = ttk.Button(self.root, 
             text='ENTRAR',
             command=lambda: AcessDB(self.root).query_name(self.entry_username.get(), self.entry_password.get())
+        )
+        self.button_exit = ttk.Button(self.root,
+            text='SAIR',
+            command=lambda: self.close_app()
         )
 
         self.label_login.grid(row=0, column=0, columnspan=3, sticky='we',padx=(50,50), pady=(10, 10))
@@ -75,6 +72,7 @@ class WidgetsLogin:
         self.entry_password.grid(row=4, column=0, columnspan=3, sticky='we', padx=(50,50))
         self.checkbox_hidden_pwd.grid(row=5, column=0, sticky=W, padx=(50,50), pady=(0, 10))
         self.button_ok.grid(row=6, column=0, columnspan=3, sticky='we', padx=(50,50), pady=(0, 10))
+        self.button_exit.grid(row=7, column=0, columnspan=3, sticky='we', padx=(50,50), pady=(0, 10))
     
     def _hidden_show_pwd(self):
         if self.value_checkbox.get():
@@ -83,6 +81,10 @@ class WidgetsLogin:
         else:
             self.entry_password.config(show='*')
             self.checkbox_hidden_pwd.config(text='Mostrar senha')
+    
+    def close_app(self):
+        if askyesno('SAIR', 'Deseja mesmo sair do programa?'):
+            self.root.destroy()
 
 
 class AcessDB:
@@ -92,16 +94,15 @@ class AcessDB:
         self.conn = mysql.connector.connect(host='localhost', user='root', passwd='', database='acaiteria')
 
     def query_name(self, user, password):
-
         cursor = self.conn.cursor(buffered=True)
-        cursor.execute(f'SELECT id_empregado FROM login_empregados WHERE nome_usuario = "{user}" AND senha_usuario = "{password}"')
+        cursor.execute(f'SELECT id_empregado FROM login_empregados WHERE BINARY nome_usuario = "{user}" AND BINARY senha_usuario = "{password}"')
 
         if cursor.rowcount == 0:
             showinfo('USUÁRIO OU SENHA INCORRETA!', 'USUÁRIO OU SENHA INCORRETA!')
         else:
-            self.id_user = cursor.fetchone()[0]
+            id_user = cursor.fetchone()[0]
 
             cursor.close()
             self.conn.close()
             self.root.destroy()
-            ProfileApp(self.id_user)
+            ProfileApp(id_user)
