@@ -3,38 +3,52 @@ import tkinter.ttk as ttk
 import ProfileWindow.TkFuncProfile as tkp
 from config.config import *
 
-
 class WindowOption:
     def __init__(self, root) -> None:
-        self.frame_option = ttk.Frame(root,
+        self.frame_option = Frame(root,
+            background=PRIMARY_BG_COLOR,
             class_='FrameOption'
         )
         self.label_edit_data = ttk.Label(self.frame_option,
+            width=40,
             text='EDITAR DADOS',
             background=PRIMARY_BG_COLOR,
             foreground=DEFAULT_FG_COLOR,
+            cursor='hand2'
+        )
+        self.label_alter_account = ttk.Label(self.frame_option,
+            width=40,
+            text='ALTERAR CONTA',
+            background=PRIMARY_BG_COLOR,
+            foreground=DEFAULT_FG_COLOR,
+            cursor='hand2'
         )
         self.label_return = ttk.Label(self.frame_option,
+            width=40,
             text='VOLTAR AO PERFIL',
             background=PRIMARY_BG_COLOR,
             foreground=DEFAULT_FG_COLOR,
+            cursor='hand2'
         )
 
         self.label_edit_data.bind('<Enter>', self.enter)
         self.label_edit_data.bind('<Leave>', self.leave)
         self.label_edit_data.bind('<Button-1>', tkp.CommandsButtons.edit_datas)
 
+        self.label_alter_account.bind('<Enter>', self.enter)
+        self.label_alter_account.bind('<Leave>', self.leave)
+        self.label_alter_account.bind('<Button-1>', tkp.CommandsButtons.return_login)
+
         self.label_return.bind('<Enter>', self.enter)
         self.label_return.bind('<Leave>', self.leave)
         self.label_return.bind('<Button-1>', tkp.CommandsButtons.return_profile)
 
-        self.frame_option.grid(row=0, column=1, sticky=EW)
-        self.label_edit_data.grid(row=0, rowspan=3, column=0, sticky=EW)
-        self.label_return.grid(row=3, rowspan=3, column=0, sticky=EW)
+        self.frame_option.grid(row=0, column=1, sticky=NS)
+        self.label_edit_data.grid(row=0, column=0, padx=(20, 0), pady=(20, 0), ipady=10, sticky=W)
+        self.label_alter_account.grid(row=1, column=0, padx=(20, 0), ipady=10, sticky=W)
+        self.label_return.grid(row=2, column=0, padx=(20, 0), pady=(0,20), ipady=10, sticky=W)
 
-        root.update_idletasks()
         root.eval(DEFAULT_WINDOW_POSITION)
-
     
     def enter(self, event):
         event.widget.configure(background=SECOND_BG_COLOR)
@@ -43,7 +57,7 @@ class WindowOption:
         event.widget.configure(background=PRIMARY_BG_COLOR)
 class WindowEdit:
 
-    def __init__(self, id_user, root) -> None:
+    def __init__(self, id_user, root: Tk) -> None:
         self.frame_edit = Frame(root,
             bg=PRIMARY_BG_COLOR,
             class_='FrameEdit'
@@ -77,20 +91,22 @@ class WindowEdit:
             text='Salvar',
             bg='#19c406',
             fg='white',
-            command=lambda: CB.save_changes()
+            command=lambda: CB.save_changes(),
+            cursor='hand2'
         )
         self.button_cancel = Button(self.frame_edit,
             text='Cancelar',
             bg='#f50000',
             fg='white',
-            command=lambda: CB.return_profile()
+            command=lambda: CB.return_profile(),
+            cursor='hand2'
         )
 
         self.styles = ttk.Style()
         self.styles.configure('.', background=PRIMARY_BG_COLOR)
         self.styles.configure('TLabel', font=('Futura Gabriola Garamond', 10), foreground=DEFAULT_FG_COLOR)
         
-        self.frame_edit.grid(row=0, column=1, padx=(20,20), sticky=W)
+        self.frame_edit.grid(row=0, column=1, sticky=NS)
 
         self.label_name.grid(row=0, column=0, columnspan=2, padx=(20,20), pady=(20, 0), sticky=W)
         self.entry_name.grid(row=1, column=0, columnspan=2, padx=(20,20), pady=(0,10), sticky=W)
@@ -98,10 +114,10 @@ class WindowEdit:
         self.entry_phone.grid(row=3, column=0, columnspan=2, padx=(20,20), pady=(0,10), sticky=W)
         self.label_email.grid(row=4, column=0, columnspan=2, padx=(20,20), sticky=W)
         self.entry_email.grid(row=5, column=0, columnspan=2, padx=(20,20), pady=(0,10), sticky=W)
-        self.button_save.grid(row=6, column=0, padx=(20,5), pady=(0,20), sticky='we')
-        self.button_cancel.grid(row=6, column=1, padx=(5,20), pady=(0,20), sticky='we')
+        self.button_save.grid(row=6, column=0, padx=(20,5), pady=(0,20), sticky=EW)
+        self.button_cancel.grid(row=6, column=1, padx=(5,20), pady=(0,20), sticky=EW)
 
-        root.update_idletasks()
+
         root.eval(DEFAULT_WINDOW_POSITION)
 
         self.entrys = (self.entry_name, self.entry_phone, self.entry_email)

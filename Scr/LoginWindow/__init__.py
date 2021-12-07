@@ -58,11 +58,13 @@ class WidgetsLogin:
         )
         self.button_ok = ttk.Button(self.root, 
             text='ENTRAR',
-            command=lambda: AcessDB(self.root).query_name(self.entry_username.get(), self.entry_password.get())
+            command=lambda: AcessDB(self.root).query_name(self.entry_username.get(), self.entry_password.get()),
+            cursor='hand2'
         )
         self.button_exit = ttk.Button(self.root,
             text='SAIR',
-            command=lambda: self.close_app()
+            command=lambda: self.close_app(),
+            cursor='hand2'
         )
 
         self.label_login.grid(row=0, column=0, columnspan=3, sticky='we',padx=(50,50), pady=(10, 10))

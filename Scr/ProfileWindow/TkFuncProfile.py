@@ -1,5 +1,3 @@
-from doctest import master
-from glob import glob
 from tkinter import *
 from tkinter.messagebox import askyesno
 import tkinter.ttk as ttk
@@ -140,7 +138,14 @@ class CommandsButtons:
     
     def open_options(self):
         CommandsButtons.switch_pages('FrameProfile')
-        ow.WindowOption(globals()["master"])
+        CommandsButtons.switch_pages('FrameEdit')
+        if globals()["master"].master != None:
+            try:
+                ow.WindowOption(globals()["master"].master)
+            except:
+                ow.WindowOption(globals()["master"])
+        else:
+            ow.WindowOption(globals()["master"])
 
     def open_sheet(self):
         try:
@@ -168,8 +173,3 @@ class CommandsButtons:
                 if w.winfo_class() == frame_class:
                     for wid in w.children.values():
                         wid.grid_forget()
-    
-
-
-
-

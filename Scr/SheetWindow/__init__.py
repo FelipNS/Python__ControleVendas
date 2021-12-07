@@ -168,21 +168,24 @@ class ButtonAndObs(Header, Additionals):
             width=15, 
             height=2, 
             background='lime',
-            command=lambda: self.send_data()
+            command=lambda: self.send_data(),
+            cursor='hand2'
         )
         self.button_close = Button(self.frame_buttons, 
             text='VOLTAR AO PERFIL', 
             width=15, 
             height=2, 
             background='red',
-            command=lambda: tkf.CommandButtons(window=self.root).close_window(self.id_user)
+            command=lambda: tkf.CommandButtons(window=self.root).close_window(self.id_user),
+            cursor='hand2'
         )
         self.button_clear = Button(self.frame_buttons, 
             text='Limpar', 
             width=15, 
             height=2, 
             background='yellow',
-            command=lambda: tkf.CommandButtons(window=self.root).clear_widgets()
+            command=lambda: tkf.CommandButtons(window=self.root).clear_widgets(),
+            cursor='hand2'
         )
         self.label_obs = LabelFrame(self.frame_buttons, 
             text='Observações', 
