@@ -3,5 +3,8 @@ Scr/ProfileWindow/__pycache__
 Scr/SheetWindow/__pycache__
 Scr/config/__pycache__
 Scr/SupportFiles
+Img/gear.png
+Img/pencil.png
+Img/logout.png
 .vscode
 .pytest_cache

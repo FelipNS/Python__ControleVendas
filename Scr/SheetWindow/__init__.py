@@ -11,7 +11,7 @@ class MainApp(Tk):
         super().__init__()
         
         self.title('Cadastro comandas')
-        self.configure(bg=DEFAUTL_BG_COLOR)
+        self.configure(bg=PRIMARY_BG_COLOR)
 
         ButtonAndObs(self, id_user)
         
@@ -20,10 +20,10 @@ class MainApp(Tk):
         
         self.styles = ttk.Style()
         self.styles.configure('.', font=('Apple LiGothic', 10, "bold"))
-        self.styles.configure('TLabel', background='#ff80ff')
+        self.styles.configure('TLabel', background=PRIMARY_BG_COLOR, foreground=DEFAULT_FG_COLOR)
         self.styles.configure('left.TLabel', width=24)
         self.styles.configure('right.TLabel', width=11, padding=[180,0,0,0], anchor=E)
-        self.styles.configure('TFrame', background='#ff80ff')
+        self.styles.configure('TFrame', background=PRIMARY_BG_COLOR, foreground=DEFAULT_FG_COLOR)
         self.mainloop()
 
 
@@ -186,7 +186,8 @@ class ButtonAndObs(Header, Additionals):
         )
         self.label_obs = LabelFrame(self.frame_buttons, 
             text='Observações', 
-            bg='#ff80ff', 
+            bg=PRIMARY_BG_COLOR,
+            foreground=DEFAULT_FG_COLOR, 
             font=('Apple LiGothic', 15)
         )
         self.textbox_obs = Text(self.label_obs, 

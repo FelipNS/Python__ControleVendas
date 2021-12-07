@@ -1,4 +1,7 @@
+from doctest import master
+from glob import glob
 from tkinter import *
+from tkinter.messagebox import askyesno
 import tkinter.ttk as ttk
 import mysql.connector
 from config.config import *
@@ -10,27 +13,30 @@ import ProfileWindow.OtherWindows as ow
 class CommandsButtons:
 
     def __init__(self, id_user, master: Tk) -> None:
-        self.master = master
-        self.id_user = id_user
-        self.conn = mysql.connector.connect(host='localhost', user='root', passwd='', database='acaiteria', port='3306')
-        self.cursor = self.conn.cursor()
+        globals()["master"] = master
+        globals()["id_user"] = id_user
+        globals()["conn"] = mysql.connector.connect(host='localhost', user='root', passwd='', database='acaiteria', port='3306')
+        self.cursor = globals()["conn"].cursor()
 
     def query_profile(self) -> dict:
-        self.cursor.execute(f'SELECT E.*, P.nome FROM empregados E INNER JOIN previlegios P ON E.id_previlegio = P.id AND E.id = {self.id_user};')
+        self.cursor.execute(f'''SELECT E.id, E.primeiro_nome, E.sobrenome, E.nr_celular, E.email, P.nome Nivel, C.nome Cidade
+            FROM empregados E 
+            INNER JOIN previlegios P ON E.id_previlegio = P.id
+            INNER JOIN cidades C ON E.id_filial = C.id
+            WHERE E.id = {globals()["id_user"]};''')
         dict_datas = dict()
 
-        for id, id_priv, first, last, nr_phone, email, level in self.cursor.fetchall():
+        for id, first, last, nr_phone, email, level, branch in self.cursor.fetchall():
             dict_datas['id'] = id
-            dict_datas['id_priv'] = id_priv 
             dict_datas['name'] = f'{first.upper()} {last.upper()}'
-            dict_datas['level'] = level
             dict_datas['nr_phone'] = nr_phone
             dict_datas['email'] = email
+            dict_datas['level'] = level
+            dict_datas['branch'] = branch.upper()
         return dict_datas
 
     def edit_datas(self):
-        self.master.destroy()
-        datas_profile = self.query_profile()
+        datas_profile = CommandsButtons(globals()["id_user"], globals()["master"]).query_profile()
         name = datas_profile['name'].title()
         phone = list(datas_profile['nr_phone'])
         insert_char = ((0, '('), (3, ')'), (4, ' '), (6, ' '), (11, '-'))
@@ -41,7 +47,14 @@ class CommandsButtons:
             number += i
         
         #CREATE WINDOW's EDIT
-        win_edit = ow.WindowEdit(self.id_user)
+        CommandsButtons.switch_pages('FrameOption')
+        if globals()["master"].master != None:
+            try:
+                win_edit = ow.WindowEdit(globals()["id_user"], globals()["master"].master)
+            except:
+                win_edit = ow.WindowEdit(globals()["id_user"], globals()["master"])
+        else:
+            win_edit = ow.WindowEdit(globals()["id_user"], globals()["master"])
         entrys = globals()['entrys'] = win_edit.return_entrys()
         entry_name = entrys[0]
         entry_phone = entrys[1]
@@ -101,26 +114,60 @@ class CommandsButtons:
             if i.isnumeric():
                 number += str(i)
         email = entry_email.get()
-        sql = f'UPDATE empregados SET primeiro_nome = "{first_name}", sobrenome = "{last_name}", nr_celular = "{number}", email = "{email}" WHERE id = {self.id_user}'
+        sql = f'UPDATE empregados SET primeiro_nome = "{first_name}", sobrenome = "{last_name}", nr_celular = "{number}", email = "{email}" WHERE id = {globals()["id_user"]}'
         self.cursor.execute(sql)
-        self.conn.commit()
-        self.master.destroy()
-        pw.ProfileApp(self.id_user)
+        globals()["conn"].commit()
+        self.return_profile()
 
     def return_profile(self):
-        self.master.destroy()
-        pw.ProfileApp(self.id_user)
+        CommandsButtons.switch_pages('FrameEdit')
+        CommandsButtons.switch_pages('FrameOption')
+        if globals()["master"].master != None:
+            try:
+                pw.WindowLevelOne(globals()["master"].master, globals()["id_user"])
+            except:
+                pw.WindowLevelOne(globals()["master"], globals()["id_user"])
+        else:
+            pw.WindowLevelOne(globals()["master"], globals()["id_user"])
 
     def return_login(self):
-        self.master.destroy()
+        try:
+            globals()["master"].master.destroy()
+        except:
+            globals()["master"].destroy()
+
         lw.MainLogin()
+    
+    def open_options(self):
+        CommandsButtons.switch_pages('FrameProfile')
+        ow.WindowOption(globals()["master"])
 
     def open_sheet(self):
-        self.master.destroy()
-        sw.MainApp(self.id_user)
+        try:
+            globals()["master"].master.destroy()
+        except:
+            globals()["master"].destroy()
+
+        sw.MainApp(globals()["id_user"])
     
     def exit_all(self):
-        self.master.destroy()
+        if askyesno('FAZER LOGOUT', f'Deseja realmente fechar do programa?'):
+            try:
+                globals()["master"].master.destroy()
+            except:
+                globals()["master"].destroy()
+
+    def switch_pages(frame_class):
+        try:
+            for w in globals()["master"].master.children.values():
+                if w.winfo_class() == frame_class:
+                    for wid in w.children.values():
+                        wid.grid_forget()
+        except:
+            for w in globals()["master"].children.values():
+                if w.winfo_class() == frame_class:
+                    for wid in w.children.values():
+                        wid.grid_forget()
     
 
 
