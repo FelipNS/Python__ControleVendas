@@ -1,5 +1,3 @@
-from doctest import master
-from glob import glob
 from tkinter import *
 from tkinter.messagebox import askyesno
 import tkinter.ttk as ttk
@@ -12,13 +10,24 @@ import ProfileWindow.OtherWindows as ow
 
 class CommandsButtons:
 
-    def __init__(self, id_user, master: Tk) -> None:
+    def __init__(self, id_user: int, master: Tk) -> None:
+        """Connect to MySQL database and create global id_user and master variables 
+
+        Args:
+            id_user (int): ID user to load your profile.
+            master (Tk): Root window
+        """
         globals()["master"] = master
         globals()["id_user"] = id_user
-        globals()["conn"] = mysql.connector.connect(host='localhost', user='root', passwd='', database='acaiteria', port='3306')
-        self.cursor = globals()["conn"].cursor()
+        self.conn = mysql.connector.connect(host='localhost', user='root', passwd='', database='acaiteria', port='3306')
+        self.cursor = self.conn.cursor()
 
     def query_profile(self) -> dict:
+        """Colect user data in database 
+
+        Returns:
+            dict: Dict containing user data
+        """
         self.cursor.execute(f'''SELECT E.id, E.primeiro_nome, E.sobrenome, E.nr_celular, E.email, P.nome Nivel, C.nome Cidade
             FROM empregados E 
             INNER JOIN previlegios P ON E.id_previlegio = P.id
@@ -35,7 +44,9 @@ class CommandsButtons:
             dict_datas['branch'] = branch.upper()
         return dict_datas
 
-    def edit_datas(self):
+    def edit_datas(self) -> None:
+        """Open the editing frame 
+        """
         datas_profile = CommandsButtons(globals()["id_user"], globals()["master"]).query_profile()
         name = datas_profile['name'].title()
         phone = list(datas_profile['nr_phone'])
@@ -47,7 +58,7 @@ class CommandsButtons:
             number += i
         
         #CREATE WINDOW's EDIT
-        CommandsButtons.switch_pages('FrameOption')
+        CommandsButtons.__switch_pages('FrameOption')
         if globals()["master"].master != None:
             try:
                 win_edit = ow.WindowEdit(globals()["id_user"], globals()["master"].master)
@@ -64,6 +75,11 @@ class CommandsButtons:
         entry_email.insert(0, datas_profile['email'])
 
     def format_number(self, evt):
+        """Event active whenever a key is pressed
+
+        Args:
+            evt (tk.Event): Don't matter
+        """
         entrys = globals()['entrys']
         entry_phone = entrys[1]
 
@@ -96,7 +112,9 @@ class CommandsButtons:
                 entry_phone.delete(0, END)
                 entry_phone.insert(0, number_for)
 
-    def save_changes(self):
+    def save_changes(self) -> None:
+        """Update database
+        """
         entrys = globals()['entrys']
         entry_name = entrys[0]
         entry_phone = entrys[1]
@@ -116,12 +134,14 @@ class CommandsButtons:
         email = entry_email.get()
         sql = f'UPDATE empregados SET primeiro_nome = "{first_name}", sobrenome = "{last_name}", nr_celular = "{number}", email = "{email}" WHERE id = {globals()["id_user"]}'
         self.cursor.execute(sql)
-        globals()["conn"].commit()
+        self.conn.commit()
         self.return_profile()
 
-    def return_profile(self):
-        CommandsButtons.switch_pages('FrameEdit')
-        CommandsButtons.switch_pages('FrameOption')
+    def return_profile(self) -> None:
+        """Return profile frame
+        """
+        CommandsButtons.__switch_pages('FrameEdit')
+        CommandsButtons.__switch_pages('FrameOption')
         if globals()["master"].master != None:
             try:
                 pw.WindowLevelOne(globals()["master"].master, globals()["id_user"])
@@ -130,7 +150,9 @@ class CommandsButtons:
         else:
             pw.WindowLevelOne(globals()["master"], globals()["id_user"])
 
-    def return_login(self):
+    def return_login(self) -> None:
+        """Destroy profile window and open login window
+        """
         try:
             globals()["master"].master.destroy()
         except:
@@ -138,11 +160,22 @@ class CommandsButtons:
 
         lw.MainLogin()
     
-    def open_options(self):
-        CommandsButtons.switch_pages('FrameProfile')
-        ow.WindowOption(globals()["master"])
+    def open_options(self) -> None:
+        """Open option frame
+        """
+        CommandsButtons.__switch_pages('FrameProfile')
+        CommandsButtons.__switch_pages('FrameEdit')
+        if globals()["master"].master != None:
+            try:
+                ow.WindowOption(globals()["master"].master)
+            except:
+                ow.WindowOption(globals()["master"])
+        else:
+            ow.WindowOption(globals()["master"])
 
-    def open_sheet(self):
+    def open_sheet(self) -> None:
+        """Destroy profile window and open sheet window
+        """
         try:
             globals()["master"].master.destroy()
         except:
@@ -150,14 +183,21 @@ class CommandsButtons:
 
         sw.MainApp(globals()["id_user"])
     
-    def exit_all(self):
+    def exit_all(self) -> None:
+        """Close app
+        """
         if askyesno('FAZER LOGOUT', f'Deseja realmente fechar do programa?'):
             try:
                 globals()["master"].master.destroy()
             except:
                 globals()["master"].destroy()
 
-    def switch_pages(frame_class):
+    def __switch_pages(frame_class: Frame) -> None:
+        """Forget grid of a frame before create the new frame
+
+        Args:
+            frame_class (tk.Frame): Frame that will destroy
+        """
         try:
             for w in globals()["master"].master.children.values():
                 if w.winfo_class() == frame_class:
@@ -168,8 +208,3 @@ class CommandsButtons:
                 if w.winfo_class() == frame_class:
                     for wid in w.children.values():
                         wid.grid_forget()
-    
-
-
-
-

@@ -1,11 +1,9 @@
 NIVEL I:
 Cadastrar as comandas
-Ler as comandas
 
 NIVEL II:
 Cadastrar as comandas
 Ler as comandas
-Atualizar as comandas
 Excluir as comandas
 Cadastrar e excluir pessoas do NIVEL I
 Dar previlegios para o NIVEL I

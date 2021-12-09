@@ -10,7 +10,7 @@ class CommandButtons:
         """
         self.kargs = kargs
 
-    def clear_widgets(self):
+    def clear_widgets(self) -> None:
         for frame in self.kargs['window'].children.values():
             for widget in frame.children.values():
                 match widget.winfo_class():
@@ -26,12 +26,12 @@ class CommandButtons:
                     case _:
                         pass
     
-    def close_window(self, id_user):
+    def close_window(self, id_user) -> None:
         self.kargs['window'].destroy()
         pw.ProfileApp(id_user)
 
-    def save_sheet(self, json_sheet: dict):
-        mf.MongoCRUD().insert_item(json_sheet)
+    def save_sheet(self, json_sheet: dict) -> None:
+        mf.MongoFunctions().insert_item(json_sheet)
         self.clear_widgets()
         tkinter.messagebox.showinfo(title='Comanda adicionada', message='Comanda adicionada com sucesso!')
 

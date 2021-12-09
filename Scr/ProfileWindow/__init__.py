@@ -7,11 +7,17 @@ from config.config import *
 
 class ProfileApp(Tk):
 
-    def __init__(self, id_user) -> None:
+    def __init__(self, id_user: int) -> None:
+        """Create root window, sidebar and loads profile widgets
+
+        Args:
+            id_user (int): ID user to load your profile.
+        """
         super().__init__()
 
         self.title('PERFIL')
         self.configure(bg=PRIMARY_BG_COLOR)
+        self.geometry('405x245')
 
         self.styles = ttk.Style()
         self.styles.configure('.', background=PRIMARY_BG_COLOR)
@@ -28,28 +34,29 @@ class ProfileApp(Tk):
             image=img_tk_logo,
             background=SECOND_BG_COLOR
         )
-        img_gear = Image.open("Img/gear.jpg")
-        img_gear = img_gear.resize((50, 50))
-        img_tk_gear =  ImageTk.PhotoImage(img_gear)
-        self.image_gear = ttk.Label(self.frame_sidebar,
-            image=img_tk_gear,
-            background=SECOND_BG_COLOR
+        img_menu = Image.open("Img/menu.jpg")
+        img_menu = img_menu.resize((50, 50))
+        img_tk_menu =  ImageTk.PhotoImage(img_menu)
+        self.image_menu = ttk.Label(self.frame_sidebar,
+            image=img_tk_menu,
+            background=SECOND_BG_COLOR,
+            cursor='hand2'
         )
         img_logout = Image.open("Img/logout.jpg")
         img_logout = img_logout.resize((50, 50))
         img_tk_logout =  ImageTk.PhotoImage(img_logout)
         self.image_logout = ttk.Label(self.frame_sidebar,
             image=img_tk_logout,
-            background=SECOND_BG_COLOR
+            background=SECOND_BG_COLOR,
+            cursor='hand2'
         )
         
-        self.image_gear.bind('<Button-1>', tkf.CommandsButtons.open_options)
+        self.image_menu.bind('<Button-1>', tkf.CommandsButtons.open_options)
         self.image_logout.bind('<Button-1>', tkf.CommandsButtons.exit_all)
 
-
-        self.frame_sidebar.grid(row=0, rowspan=5, column=0, sticky=NS)
+        self.frame_sidebar.grid(row=0, column=0, sticky=NS)
         self.image_logo.pack(side=TOP, pady=(20, 0), fill=BOTH, anchor=CENTER)
-        self.image_gear.pack(side=TOP, padx=(10, 10), pady=(25, 25), fill=BOTH, anchor=CENTER)
+        self.image_menu.pack(side=TOP, padx=(10, 10), pady=(25, 25), fill=BOTH, anchor=CENTER)
         self.image_logout.pack(side=BOTTOM, padx=(10, 10), pady=(0, 20), fill=BOTH, anchor=CENTER)
 
         WindowLevelOne(self, id_user)
@@ -57,7 +64,13 @@ class ProfileApp(Tk):
 
 class WindowLevelOne:
 
-    def __init__(self, master: Tk, id_user) -> None:
+    def __init__(self, master: Tk, id_user: int) -> None:
+        """Create profile widgets
+
+        Args:
+            master (Tk): root window
+            id_user (int): ID user to load your profile.
+        """
         self.root = master
         self.id_user = id_user
         self.commands = tkf.CommandsButtons(self.id_user, self.root)
@@ -89,15 +102,15 @@ class WindowLevelOne:
         self.button_new_sheet = ttk.Button(self.frame_profile,
             text='Cadastrar novas comandas',
             command=lambda: self.commands.open_sheet(),
-            class_='ButtonNew'
+            cursor='hand2'
         )
         
-        self.frame_profile.grid(row=0, rowspan=5, column=1, sticky=NS)
-        self.label_id.grid(row=0, column=1, columnspan=3, sticky=W, padx=(20,20), pady=(20,10))
-        self.label_name.grid(row=1, column=1, columnspan=3, sticky=W, padx=(20,20), pady=(0,10))
-        self.label_level.grid(row=2, column=1, columnspan=3, sticky=W, padx=(20,20), pady=(0,10))
-        self.label_branch.grid(row=3, column=1, columnspan=3, sticky=W, padx=(20,20), pady=(0,10))
-        self.button_new_sheet.grid(row=5, column=1, columnspan=3, sticky='we', padx=(20,20), pady=(0,10))
+        self.frame_profile.grid(row=0, column=1, sticky=NS)
+        self.label_id.grid(row=0, column=0, columnspan=2, sticky=W, padx=(20,20), pady=(20,10))
+        self.label_name.grid(row=1, column=0, columnspan=2, sticky=W, padx=(20,20), pady=(0,10))
+        self.label_level.grid(row=2, column=0, columnspan=2, sticky=W, padx=(20,20), pady=(0,10))
+        self.label_branch.grid(row=3, column=0, columnspan=2, sticky=W, padx=(20,20), pady=(0,10))
+        self.button_new_sheet.grid(row=4, column=0, columnspan=2, sticky=EW, padx=(20,20), pady=(0,10))
         
         datas = self.commands.query_profile()
 
@@ -106,17 +119,6 @@ class WindowLevelOne:
         self.str_level.set(f'NÍVEL: {datas["level"]}')
         self.str_branch.set(f'FILIAL: {datas["branch"]}')
 
-
-        match datas['level']:
-            case 'NIVEL II':
-                ow.WindowLevelTwo(self.root)
-            case 'NIVEL III', _:
-                ow.WindowLevelThree(self.root)
-
-        self.root.update_idletasks()
         self.root.eval(DEFAULT_WINDOW_POSITION)
-
+        
         self.root.mainloop()
-
-
-#286
