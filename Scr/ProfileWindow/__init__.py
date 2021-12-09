@@ -7,7 +7,12 @@ from config.config import *
 
 class ProfileApp(Tk):
 
-    def __init__(self, id_user) -> None:
+    def __init__(self, id_user: int) -> None:
+        """Create root window, sidebar and loads profile widgets
+
+        Args:
+            id_user (int): ID user to load your profile.
+        """
         super().__init__()
 
         self.title('PERFIL')
@@ -29,11 +34,11 @@ class ProfileApp(Tk):
             image=img_tk_logo,
             background=SECOND_BG_COLOR
         )
-        img_gear = Image.open("Img/gear.jpg")
-        img_gear = img_gear.resize((50, 50))
-        img_tk_gear =  ImageTk.PhotoImage(img_gear)
-        self.image_gear = ttk.Label(self.frame_sidebar,
-            image=img_tk_gear,
+        img_menu = Image.open("Img/menu.jpg")
+        img_menu = img_menu.resize((50, 50))
+        img_tk_menu =  ImageTk.PhotoImage(img_menu)
+        self.image_menu = ttk.Label(self.frame_sidebar,
+            image=img_tk_menu,
             background=SECOND_BG_COLOR,
             cursor='hand2'
         )
@@ -46,12 +51,12 @@ class ProfileApp(Tk):
             cursor='hand2'
         )
         
-        self.image_gear.bind('<Button-1>', tkf.CommandsButtons.open_options)
+        self.image_menu.bind('<Button-1>', tkf.CommandsButtons.open_options)
         self.image_logout.bind('<Button-1>', tkf.CommandsButtons.exit_all)
 
         self.frame_sidebar.grid(row=0, column=0, sticky=NS)
         self.image_logo.pack(side=TOP, pady=(20, 0), fill=BOTH, anchor=CENTER)
-        self.image_gear.pack(side=TOP, padx=(10, 10), pady=(25, 25), fill=BOTH, anchor=CENTER)
+        self.image_menu.pack(side=TOP, padx=(10, 10), pady=(25, 25), fill=BOTH, anchor=CENTER)
         self.image_logout.pack(side=BOTTOM, padx=(10, 10), pady=(0, 20), fill=BOTH, anchor=CENTER)
 
         WindowLevelOne(self, id_user)
@@ -59,7 +64,13 @@ class ProfileApp(Tk):
 
 class WindowLevelOne:
 
-    def __init__(self, master: Tk, id_user) -> None:
+    def __init__(self, master: Tk, id_user: int) -> None:
+        """Create profile widgets
+
+        Args:
+            master (Tk): root window
+            id_user (int): ID user to load your profile.
+        """
         self.root = master
         self.id_user = id_user
         self.commands = tkf.CommandsButtons(self.id_user, self.root)
@@ -108,15 +119,6 @@ class WindowLevelOne:
         self.str_level.set(f'NÍVEL: {datas["level"]}')
         self.str_branch.set(f'FILIAL: {datas["branch"]}')
 
-
-        match datas['level']:
-            case 'NIVEL II':
-                ow.WindowLevelTwo(self.root)
-            case 'NIVEL III', _:
-                ow.WindowLevelThree(self.root)
-
         self.root.eval(DEFAULT_WINDOW_POSITION)
-
-
         
         self.root.mainloop()

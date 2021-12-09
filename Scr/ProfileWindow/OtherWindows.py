@@ -4,7 +4,12 @@ import ProfileWindow.TkFuncProfile as tkp
 from config.config import *
 
 class WindowOption:
-    def __init__(self, root) -> None:
+    def __init__(self, root: Tk) -> None:
+        """Create option frame in root window
+
+        Args:
+            root (Tk): root window
+        """
         self.frame_option = Frame(root,
             background=PRIMARY_BG_COLOR,
             class_='FrameOption'
@@ -51,13 +56,30 @@ class WindowOption:
         root.eval(DEFAULT_WINDOW_POSITION)
     
     def enter(self, event):
+        """Event active when mouse is over label.
+
+        Args:
+            event (tk.Event): Don't matter
+        """
         event.widget.configure(background=SECOND_BG_COLOR)
 
     def leave(self, event):
-        event.widget.configure(background=PRIMARY_BG_COLOR)
-class WindowEdit:
+        """Event active when mouse leave label
 
-    def __init__(self, id_user, root: Tk) -> None:
+        Args:
+            event (tk.Event): Don't matter
+        """
+        event.widget.configure(background=PRIMARY_BG_COLOR)
+
+
+class WindowEdit:
+    def __init__(self, id_user: int, root: Tk) -> None:
+        """Create frame to user modify your datas 
+
+        Args:
+            id_user (int): ID user to load your profile.
+            root (Tk): Root window
+        """
         self.frame_edit = Frame(root,
             bg=PRIMARY_BG_COLOR,
             class_='FrameEdit'
@@ -107,7 +129,6 @@ class WindowEdit:
         self.styles.configure('TLabel', font=('Futura Gabriola Garamond', 10), foreground=DEFAULT_FG_COLOR)
         
         self.frame_edit.grid(row=0, column=1, sticky=NS)
-
         self.label_name.grid(row=0, column=0, columnspan=2, padx=(20,20), pady=(20, 0), sticky=W)
         self.entry_name.grid(row=1, column=0, columnspan=2, padx=(20,20), pady=(0,10), sticky=W)
         self.label_phone.grid(row=2, column=0, columnspan=2, padx=(20,20), sticky=W)
@@ -117,20 +138,16 @@ class WindowEdit:
         self.button_save.grid(row=6, column=0, padx=(20,5), pady=(0,20), sticky=EW)
         self.button_cancel.grid(row=6, column=1, padx=(5,20), pady=(0,20), sticky=EW)
 
-
         root.eval(DEFAULT_WINDOW_POSITION)
 
         self.entrys = (self.entry_name, self.entry_phone, self.entry_email)
 
     def return_entrys(self) -> tuple:
+        """Return tuple with entry widgets
+
+        Returns:
+            tuple: Contains entry widgets
+        """
         return self.entrys
 
-class WindowLevelTwo:
 
-    def __init__(self, root: Tk) -> None:
-        self.root = root
-
-class WindowLevelThree:
-
-    def __init__(self, root: Tk) -> None:
-        self.root = root
