@@ -122,7 +122,8 @@ class Additionals:
         self.additionals_type = ['cereais', 'chocolates', 'coberturas', 'derivados do leite', 'diversos', 'frutas']
 
         for i in range(0,len(self.additionals_type)):
-            self.list_itens = mf.MongoFunctions().read_item(self.additionals_type[i], 'adicionais')
+            cur_type =self.additionals_type[i]
+            self.list_itens = mf.MongoFunctions().read_item(cur_type, 'adicionais')
             match i:
                 case 0:
                     k = 0
@@ -148,27 +149,27 @@ class Additionals:
                     k = 1
                     start_row = 16
                     p= (20,0)
-            globals()[f'frame_{self.additionals_type[i]}'] = ttk.Frame(self.root)
-            globals()[f'scrollbar_{self.additionals_type[i]}'] = Scrollbar(globals()[f'frame_{self.additionals_type[i]}'],
+            globals()[f'frame_{cur_type}'] = ttk.Frame(self.root)
+            globals()[f'scrollbar_{cur_type}'] = Scrollbar(globals()[f'frame_{cur_type}'],
                 orient=VERTICAL
                 )
-            globals()[f'listbox_{self.additionals_type[i]}'] = Listbox(globals()[f'frame_{self.additionals_type[i]}'], 
+            globals()[f'listbox_{cur_type}'] = Listbox(globals()[f'frame_{cur_type}'], 
                 font=('Apple LiGothic', 10),
                 selectmode=MULTIPLE, 
                 exportselection=False,
-                yscrollcommand=globals()[f'scrollbar_{self.additionals_type[i]}'].set
+                yscrollcommand=globals()[f'scrollbar_{cur_type}'].set
             )
             for j in range(0, len(self.list_itens)):
-                globals()[f'listbox_{self.additionals_type[i]}'].insert(END, self.list_itens[j])
+                globals()[f'listbox_{cur_type}'].insert(END, self.list_itens[j])
 
-            globals()[f'label_{self.additionals_type[i]}'] = ttk.Label(globals()[f'frame_{self.additionals_type[i]}'], 
-                text=self.additionals_type[i].upper()
+            globals()[f'label_{cur_type}'] = ttk.Label(globals()[f'frame_{cur_type}'], 
+                text=cur_type.upper()
             ).grid(row=0, column=0)
 
-            globals()[f'frame_{self.additionals_type[i]}'].grid(row=start_row, column=k, rowspan=8, padx=p, pady=(0,20))
-            globals()[f'listbox_{self.additionals_type[i]}'].grid(row=1, column=0)
-            globals()[f'scrollbar_{self.additionals_type[i]}'].grid(row=1, rowspan=8, column=1, sticky=NS)
-            globals()[f'scrollbar_{self.additionals_type[i]}'].config(command=globals()[f'listbox_{self.additionals_type[i]}'].yview)
+            globals()[f'frame_{cur_type}'].grid(row=start_row, column=k, rowspan=8, padx=p, pady=(0,20))
+            globals()[f'listbox_{cur_type}'].grid(row=1, column=0)
+            globals()[f'scrollbar_{cur_type}'].grid(row=1, rowspan=8, column=1, sticky=NS)
+            globals()[f'scrollbar_{cur_type}'].config(command=globals()[f'listbox_{cur_type}'].yview)
     
     
 class ButtonAndObs(Header, Additionals):
@@ -258,7 +259,7 @@ class ButtonAndObs(Header, Additionals):
                 "n_comanda": int(number_sheet.get()),
                 "combo": combo.get(),
                 "f_pagamento": payment_method.get(),
-                "preco": int(price.get()),
+                "preco": float(price.get()),
                 "tamanho": int(size.get().split(' ')[0]) if int(size.get().split(' ')[0]) != 1 else 1000,
                 "bairro": neighborhood.get(),
                 "obs": obs.get("1.0", END),
