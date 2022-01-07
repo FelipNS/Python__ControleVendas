@@ -2,9 +2,10 @@ from tkinter import *
 import tkinter.ttk as ttk
 import ProfileWindow.TkFuncProfile as tkp
 from config.config import *
+import mysql.connector
 
 class WindowOption:
-    def __init__(self, root: Tk) -> None:
+    def __init__(self, id:int, root: Tk) -> None:
         """Create option frame in root window
 
         Args:
@@ -16,7 +17,7 @@ class WindowOption:
         )
         self.label_edit_data = ttk.Label(self.frame_option,
             width=40,
-            text='EDITAR DADOS',
+            text='EDITAR DADOS PESSOAIS',
             background=PRIMARY_BG_COLOR,
             foreground=DEFAULT_FG_COLOR,
             cursor='hand2'
@@ -24,6 +25,13 @@ class WindowOption:
         self.label_alter_account = ttk.Label(self.frame_option,
             width=40,
             text='ALTERAR CONTA',
+            background=PRIMARY_BG_COLOR,
+            foreground=DEFAULT_FG_COLOR,
+            cursor='hand2'
+        )
+        self.label_export_data = ttk.Label(self.frame_option,
+            width=40,
+            text='EXPORTAR COMANDAS',
             background=PRIMARY_BG_COLOR,
             foreground=DEFAULT_FG_COLOR,
             cursor='hand2'
@@ -44,6 +52,10 @@ class WindowOption:
         self.label_alter_account.bind('<Leave>', self.leave)
         self.label_alter_account.bind('<Button-1>', tkp.CommandsButtons.return_login)
 
+        self.label_export_data.bind('<Enter>', self.enter)
+        self.label_export_data.bind('<Leave>', self.leave)
+        self.label_export_data.bind('<Button-1>', tkp.CommandsButtons.export_window)
+
         self.label_return.bind('<Enter>', self.enter)
         self.label_return.bind('<Leave>', self.leave)
         self.label_return.bind('<Button-1>', tkp.CommandsButtons.return_profile)
@@ -51,7 +63,9 @@ class WindowOption:
         self.frame_option.grid(row=0, column=1, sticky=NS)
         self.label_edit_data.grid(row=0, column=0, padx=(20, 0), pady=(20, 0), ipady=10, sticky=W)
         self.label_alter_account.grid(row=1, column=0, padx=(20, 0), ipady=10, sticky=W)
-        self.label_return.grid(row=2, column=0, padx=(20, 0), pady=(0,20), ipady=10, sticky=W)
+        if tkp.CommandsButtons(id, root).get_id_privilege_level() in (3, 4):
+            self.label_export_data.grid(row=2, column=0, padx=(20, 0), ipady=10, sticky=W)
+        self.label_return.grid(row=3, column=0, padx=(20, 0), pady=(0,20), ipady=10, sticky=W)
 
         root.eval(DEFAULT_WINDOW_POSITION)
     
@@ -149,5 +163,37 @@ class WindowEdit:
             tuple: Contains entry widgets
         """
         return self.entrys
+
+
+class ExportWindow:
+    def __init__(self, root: Tk, id: int) -> None:
+        self.id = id
+
+        self.frame_export = Frame(root,
+            bg=PRIMARY_BG_COLOR,
+            class_='FrameExport'
+        )
+
+        self.button_export_excel = ttk.Button(self.frame_export,
+            text='Exportar dados para Excel', 
+            command=lambda: tkp.CommandsButtons(self.id, root).export_to_excel()
+        )
+        self.button_export_pdf = ttk.Button(self.frame_export,
+            text='Exportar dados para PDF', 
+            command=lambda: tkp.CommandsButtons(self.id, root).export_to_pdf()
+        )
+
+        self.frame_export.grid(row=0, column=1, sticky=NS)
+        self.button_export_excel.grid(row=0, column=0, padx=(20, 20), pady=(20,10), sticky=EW)
+        self.button_export_pdf.grid(row=1, column=0, padx=(20, 20), pady=(0,20), sticky=EW)
+
+
+
+    
+        
+    
+
+
+
 
 

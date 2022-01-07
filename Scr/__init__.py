@@ -5,5 +5,6 @@ from SheetWindow import MainApp
 
 if __name__ == '__main__':
    #MainLogin()
-   ProfileApp(randint(1, 7))
+   #ProfileApp(randint(1, 7))
+   ProfileApp(1)
 

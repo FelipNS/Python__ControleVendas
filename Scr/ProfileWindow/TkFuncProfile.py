@@ -1,5 +1,10 @@
+from selenium.webdriver import Edge
+from time import sleep
+import subprocess
+import os
 from tkinter import *
-from tkinter.messagebox import askyesno
+from tkinter.messagebox import askyesno, showinfo
+from tkinter.filedialog import askdirectory
 import tkinter.ttk as ttk
 import mysql.connector
 from config.config import *
@@ -7,6 +12,7 @@ import SheetWindow as sw
 import LoginWindow as lw
 import ProfileWindow as pw
 import ProfileWindow.OtherWindows as ow
+import DataScience as ds
 
 class CommandsButtons:
 
@@ -167,11 +173,11 @@ class CommandsButtons:
         CommandsButtons.__switch_pages('FrameEdit')
         if globals()["master"].master != None:
             try:
-                ow.WindowOption(globals()["master"].master)
+                ow.WindowOption(globals()["id_user"], globals()["master"].master)
             except:
-                ow.WindowOption(globals()["master"])
+                ow.WindowOption(globals()["id_user"], globals()["master"])
         else:
-            ow.WindowOption(globals()["master"])
+            ow.WindowOption(globals()["id_user"], globals()["master"])
 
     def open_sheet(self) -> None:
         """Destroy profile window and open sheet window
@@ -208,3 +214,65 @@ class CommandsButtons:
                 if w.winfo_class() == frame_class:
                     for wid in w.children.values():
                         wid.grid_forget()
+
+    def get_id_privilege_level(self):
+        conn = mysql.connector.connect(host='localhost', user='root', passwd='', database='acaiteria')
+        cursor = conn.cursor()
+
+        cursor.execute(f"SELECT id_previlegio FROM empregados WHERE id = {globals()['id_user']}")
+        id_prev = list(i for i in cursor)
+        return id_prev[0][0]
+    
+    def export_window(self):
+        CommandsButtons.__switch_pages('FrameExport')
+        CommandsButtons.__switch_pages('FrameOption')
+        if globals()["master"].master != None:
+            try:
+                ow.ExportWindow(globals()["master"].master, globals()["id_user"])
+            except:
+                ow.ExportWindow(globals()["master"], globals()["id_user"])
+        else:
+            ow.ExportWindow(globals()["master"], globals()["id_user"])
+        
+    def export_to_excel(self):
+        path = f"{askdirectory()}/comandas.xlsx"
+        showinfo('EXPORTAÇÃO EM ANDAMENTO', 'A EXPORTAÇÃO ESTÁ EM ANDAMENTO.')
+        ds.DataFrameToExcel(ds.ManipulationDB().create_dataframe('name'), path).export_excel()
+
+    def export_to_pdf(self):
+        showinfo('Exportação em andamento!', 'Começamos a exportação dos dados. Agora é só relaxar, assim que terminarmos abriremos o arquivo!')
+        web = Edge()
+        web.get('https://app.powerbi.com/groups/me/list?noSignUpCheck=1&cmpid=pbi-home-body-snn-signin')
+
+        email = 'email@company'
+        password = 'ABC123'
+
+        web.find_element_by_xpath('//*[@id="i0116"]').send_keys(email)
+        web.find_element_by_xpath('//*[@id="idSIButton9"]').click()
+        sleep(2)
+
+        web.find_element_by_xpath('//*[@id="i0118"]').send_keys(password)
+        web.find_element_by_xpath('//*[@id="idSIButton9"]').click()
+        sleep(2)
+
+        web.find_element_by_xpath('//*[@id="idBtn_Back"]').click()
+
+        web.find_element_by_xpath('//*[@id="artifactContentList"]/div[1]/div[1]/div[2]/span/a').click()
+
+        while len(web.find_elements_by_id('exportMenuBtn')) < 1:
+            sleep(1)
+
+        web.find_element_by_xpath('//*[@id="exportMenuBtn"]/span').click()
+        sleep(2)
+        web.find_element_by_xpath('//*[@id="mat-menu-panel-11"]/div/button[3]').click()
+        sleep(2)
+        web.find_element_by_xpath('//*[@id="okButton"]').click()
+
+        while True:
+            try:
+                os.rename(r'C:\Users\USER\Downloads\AnaliseDados.pdf', r'C:\Users\USER\OneDrive\Documentos\Programação\Python\Projetos\Comandas-Açai\Dashboard\AnaliseDados.pdf')
+                subprocess.Popen(r'explorer C:\Users\USER\OneDrive\Documentos\Programação\Python\Projetos\Comandas-Açai\Dashboard\AnaliseDados.pdf')
+                break
+            except:
+                sleep(10)
+    

@@ -259,7 +259,7 @@ class ButtonAndObs(Header, Additionals):
                 "n_comanda": int(number_sheet.get()),
                 "combo": combo.get(),
                 "f_pagamento": payment_method.get(),
-                "preco": int(price.get()),
+                "preco": float(price.get()),
                 "tamanho": int(size.get().split(' ')[0]) if int(size.get().split(' ')[0]) != 1 else 1000,
                 "bairro": neighborhood.get(),
                 "obs": obs.get("1.0", END),
