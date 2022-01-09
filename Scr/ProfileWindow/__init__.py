@@ -31,26 +31,25 @@ class ProfileApp(Tk):
         img_logo = img_logo.resize((75, 43))
         img_tk_logo =  ImageTk.PhotoImage(img_logo)
         self.image_logo = ttk.Label(self.frame_sidebar,
-            image=img_tk_logo,
-            background=SECOND_BG_COLOR
-        )
+                                    image=img_tk_logo,
+                                    background=SECOND_BG_COLOR
+                                    )
         img_menu = Image.open("Img/menu.jpg")
         img_menu = img_menu.resize((50, 50))
         img_tk_menu =  ImageTk.PhotoImage(img_menu)
         self.image_menu = ttk.Label(self.frame_sidebar,
-            image=img_tk_menu,
-            background=SECOND_BG_COLOR,
-            cursor='hand2'
-        )
+                                    image=img_tk_menu,
+                                    background=SECOND_BG_COLOR,
+                                    cursor='hand2'
+                                    )
         img_logout = Image.open("Img/logout.jpg")
         img_logout = img_logout.resize((50, 50))
         img_tk_logout =  ImageTk.PhotoImage(img_logout)
         self.image_logout = ttk.Label(self.frame_sidebar,
-            image=img_tk_logout,
-            background=SECOND_BG_COLOR,
-            cursor='hand2'
-        )
-        
+                                      image=img_tk_logout,
+                                      background=SECOND_BG_COLOR,
+                                      cursor='hand2'
+                                      )
         self.image_menu.bind('<Button-1>', tkf.CommandsButtons.open_options)
         self.image_logout.bind('<Button-1>', tkf.CommandsButtons.exit_all)
 
@@ -76,35 +75,34 @@ class WindowLevelOne:
         self.commands = tkf.CommandsButtons(self.id_user, self.root)
 
         self.frame_profile = Frame(self.root,
-            background=PRIMARY_BG_COLOR,
-            class_='FrameProfile'
-        )         
+                                   background=PRIMARY_BG_COLOR,
+                                   class_='FrameProfile'
+                                   )         
         self.str_id = StringVar()
         self.label_id = ttk.Label(self.frame_profile,
-            textvariable=self.str_id,
-            class_='LabelID'
-        )
+                                  textvariable=self.str_id,
+                                  class_='LabelID'
+                                  )
         self.str_name = StringVar()
         self.label_name = ttk.Label(self.frame_profile,
-            textvariable=self.str_name,
-            class_='LabelName'
-        )
+                                    textvariable=self.str_name,
+                                    class_='LabelName'
+                                    )
         self.str_level = StringVar()
         self.label_level = ttk.Label(self.frame_profile,
-            textvariable=self.str_level,
-            class_='LabelLevel'
-        )
+                                     textvariable=self.str_level,
+                                     class_='LabelLevel'
+                                     )
         self.str_branch = StringVar()
         self.label_branch = ttk.Label(self.frame_profile,
-            textvariable=self.str_branch,
-            class_='LabelBranch'
-        )
+                                      textvariable=self.str_branch,
+                                      class_='LabelBranch'
+                                      )
         self.button_new_sheet = ttk.Button(self.frame_profile,
-            text='Cadastrar novas comandas',
-            command=lambda: self.commands.open_sheet(),
-            cursor='hand2'
-        )
-        
+                                           text='Cadastrar novas comandas',
+                                           command=lambda: self.commands.open_sheet(),
+                                           cursor='hand2'
+                                           )
         self.frame_profile.grid(row=0, column=1, sticky=NS)
         self.label_id.grid(row=0, column=0, columnspan=2, sticky=W, padx=(20,20), pady=(20,10))
         self.label_name.grid(row=1, column=0, columnspan=2, sticky=W, padx=(20,20), pady=(0,10))

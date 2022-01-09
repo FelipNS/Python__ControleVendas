@@ -43,58 +43,57 @@ class Header:
         self.root = master
 
         self.frame_header = ttk.Frame(self.root, 
-            width=130, 
-            height=30,
-        )
-        self.label_sheet_number = ttk.Label(self.frame_header, 
-            text='Nº DA COMANDA: ', 
-            style='left.TLabel'
-        )
+                                      width=130, 
+                                      height=30
+                                      )
+        self.label_sheet_number = ttk.Label(self.frame_header,                                        
+                                            text='Nº DA COMANDA: ', 
+                                            style='left.TLabel'
+                                            )
         self.entry_sheet_number = ttk.Entry(self.frame_header, 
-            style='default.TEntry', 
-            width=25
-        )
+                                            style='default.TEntry', 
+                                            width=25
+                                            )
         self.label_combo_name = ttk.Label(self.frame_header, 
-            text='COMBO: ', 
-            style='right.TLabel'
-        )
+                                          text='COMBO: ',
+                                          style='right.TLabel'
+                                          )
         self.combobox_combo_name = ttk.Combobox(self.frame_header, 
-            values=mf.MongoFunctions().read_item('combos', 'dadosGerais'), 
-            width=22
-        )
+                                                values=mf.MongoFunctions().read_item('combos', 'dadosGerais'), 
+                                                width=22
+                                                )
         self.label_payment_option = ttk.Label(self.frame_header, 
-            text='FORMA DE PAGAMENTO: ', 
-            style='left.TLabel'
-        )
+                                              text='FORMA DE PAGAMENTO: ', 
+                                              style='left.TLabel'
+                                              )
         self.combobox_payment_option = ttk.Combobox(self.frame_header, 
-            values=mf.MongoFunctions().read_item('payment_option', 'dadosGerais'), 
-            width=22
-        )
-        self.label_price = ttk.Label(self.frame_header, 
-            text='VALOR (R$): ', 
-            style='right.TLabel'
-        )
+                                                    values=mf.MongoFunctions().read_item('payment_option', 'dadosGerais'), 
+                                                    width=22
+                                                    )
+        self.label_price = ttk.Label(self.frame_header,
+                                     text='VALOR (R$): ', 
+                                     style='right.TLabel'
+                                     )
         self.entry_price = ttk.Entry(self.frame_header, 
-            style='default.TEntry', 
-            width=25
-        )
+                                     style='default.TEntry', 
+                                     width=25
+                                     )
         self.label_size = ttk.Label(self.frame_header, 
-            text='TAMANHO: ', 
-            style='left.TLabel'
-        )
+                                    text='TAMANHO: ', 
+                                    style='left.TLabel'
+                                    )
         self.combobox_size = ttk.Combobox(self.frame_header, 
-            values=mf.MongoFunctions().read_item('size', 'dadosGerais'), 
-            width=22
-        )
+                                          values=mf.MongoFunctions().read_item('size', 'dadosGerais'), 
+                                          width=22
+                                          )
         self.label_neighborhood = ttk.Label(self.frame_header, 
-            text='BAIRRO: ', 
-            style='right.TLabel'
-        )
+                                            text='BAIRRO: ', 
+                                            style='right.TLabel'
+                                            )
         self.combobox_neighborhood = ttk.Combobox(self.frame_header, 
-            values=mf.MongoFunctions().read_item('neighborhood', 'dadosGerais'), 
-            width=22
-        )
-
+                                                  values=mf.MongoFunctions().read_item('neighborhood', 'dadosGerais'), 
+                                                  width=22
+                                                  )
         self.frame_header.grid(row=0, rowspan=4, column=0, columnspan=5, padx=(20,20), pady=(20,20))
         self.label_sheet_number.grid(row=0, column=0, pady=(0,2))
         self.entry_sheet_number.grid(row=0, column=1, pady=(0,2))
@@ -108,7 +107,6 @@ class Header:
         self.combobox_size.grid(row=2, column=1, pady=(0,2))
         self.label_neighborhood.grid(row=2, column=2, pady=(0,2))
         self.combobox_neighborhood.grid(row=2, column=3, padx=(0,10), pady=(0,2))
-
 
 class Additionals:
 
@@ -186,41 +184,40 @@ class ButtonAndObs(Header, Additionals):
         self.id_user = id_user
         self.frame_buttons = ttk.Frame(self.root)
         self.button_ok = Button(self.frame_buttons, 
-            text='SALVAR', 
-            width=15, 
-            height=2, 
-            background='lime',
-            command=lambda: self.send_data(),
-            cursor='hand2'
-        )
+                                text='SALVAR', 
+                                width=15, 
+                                height=2,
+                                background='lime',
+                                command=lambda: self.send_data(),
+                                cursor='hand2'
+                                )
         self.button_close = Button(self.frame_buttons, 
-            text='VOLTAR AO PERFIL', 
-            width=15, 
-            height=2, 
-            background='red',
-            command=lambda: tkf.CommandButtons(window=self.root).close_window(self.id_user),
-            cursor='hand2'
-        )
-        self.button_clear = Button(self.frame_buttons, 
-            text='Limpar', 
-            width=15, 
-            height=2, 
-            background='yellow',
-            command=lambda: tkf.CommandButtons(window=self.root).clear_widgets(),
-            cursor='hand2'
-        )
+                                   text='VOLTAR AO PERFIL', 
+                                   width=15, 
+                                   height=2, 
+                                   background='red',
+                                   command=lambda: tkf.CommandButtons(window=self.root).close_window(self.id_user),
+                                   cursor='hand2'
+                                   )
+        self.button_clear = Button(self.frame_buttons,
+                                   text='Limpar', 
+                                   width=15, 
+                                   height=2, 
+                                   background='yellow',
+                                   command=lambda: tkf.CommandButtons(window=self.root).clear_widgets(),
+                                   cursor='hand2'
+                                   )
         self.label_obs = LabelFrame(self.frame_buttons, 
-            text='Observações', 
-            bg=PRIMARY_BG_COLOR,
-            foreground=DEFAULT_FG_COLOR, 
-            font=('Apple LiGothic', 15)
-        )
+                                    text='Observações', 
+                                    bg=PRIMARY_BG_COLOR,
+                                    foreground=DEFAULT_FG_COLOR, 
+                                    font=('Apple LiGothic', 15)
+                                    )
         self.textbox_obs = Text(self.label_obs, 
-            width=52, 
-            height=5,
-            font=('Apple LiGothic', 10)
-        )
-
+                                width=52, 
+                                height=5,
+                                font=('Apple LiGothic', 10)
+                                )
         self.frame_buttons.grid(row=16, column=2, columnspan=2, padx=(20,20))
         self.button_ok.grid(row=1, column=0, pady=(0,20))
         self.button_clear.grid(row=1, column=1, padx=(10,10), pady=(0,20))

@@ -12,37 +12,37 @@ class WindowOption:
             root (Tk): root window
         """
         self.frame_option = Frame(root,
-            background=PRIMARY_BG_COLOR,
-            class_='FrameOption'
-        )
+                                  background=PRIMARY_BG_COLOR,
+                                  class_='FrameOption'
+                                  )
         self.label_edit_data = ttk.Label(self.frame_option,
-            width=40,
-            text='EDITAR DADOS PESSOAIS',
-            background=PRIMARY_BG_COLOR,
-            foreground=DEFAULT_FG_COLOR,
-            cursor='hand2'
-        )
+                                         width=40,
+                                         text='EDITAR DADOS PESSOAIS',
+                                         background=PRIMARY_BG_COLOR,
+                                         foreground=DEFAULT_FG_COLOR,
+                                         cursor='hand2'
+                                         )
         self.label_alter_account = ttk.Label(self.frame_option,
-            width=40,
-            text='ALTERAR CONTA',
-            background=PRIMARY_BG_COLOR,
-            foreground=DEFAULT_FG_COLOR,
-            cursor='hand2'
-        )
+                                             width=40,
+                                             text='ALTERAR CONTA',
+                                             background=PRIMARY_BG_COLOR,
+                                             foreground=DEFAULT_FG_COLOR,
+                                             cursor='hand2'
+                                             )
         self.label_export_data = ttk.Label(self.frame_option,
-            width=40,
-            text='EXPORTAR COMANDAS',
-            background=PRIMARY_BG_COLOR,
-            foreground=DEFAULT_FG_COLOR,
-            cursor='hand2'
-        )
+                                           width=40,
+                                           text='EXPORTAR COMANDAS',
+                                           background=PRIMARY_BG_COLOR,
+                                           foreground=DEFAULT_FG_COLOR,
+                                           cursor='hand2'
+                                           )
         self.label_return = ttk.Label(self.frame_option,
-            width=40,
-            text='VOLTAR AO PERFIL',
-            background=PRIMARY_BG_COLOR,
-            foreground=DEFAULT_FG_COLOR,
-            cursor='hand2'
-        )
+                                      width=40,
+                                      text='VOLTAR AO PERFIL',
+                                      background=PRIMARY_BG_COLOR,
+                                      foreground=DEFAULT_FG_COLOR,
+                                      cursor='hand2'
+                                      )
 
         self.label_edit_data.bind('<Enter>', self.enter)
         self.label_edit_data.bind('<Leave>', self.leave)
@@ -95,49 +95,48 @@ class WindowEdit:
             root (Tk): Root window
         """
         self.frame_edit = Frame(root,
-            bg=PRIMARY_BG_COLOR,
-            class_='FrameEdit'
-        )
+                                bg=PRIMARY_BG_COLOR,
+                                class_='FrameEdit'
+                                )
         self.id_user = id_user
         CB = tkp.CommandsButtons(self.id_user, self.frame_edit)
 
         self.label_name = ttk.Label(self.frame_edit,
-            text='Nome'
-        )
+                                    text='Nome'
+                                    )
         self.entry_name = ttk.Entry(self.frame_edit,
-            width=40,
-            font=('Futura Gabriola Garamond', 10)
-        )
+                                    width=40,
+                                    font=('Futura Gabriola Garamond', 10)
+                                    )
         self.label_phone = ttk.Label(self.frame_edit,
-            text='Nº de celular'
-        )
+                                     text='Nº de celular'
+                                     )
         self.entry_phone = ttk.Entry(self.frame_edit,
-            width=40,
-            font=('Futura Gabriola Garamond', 10)
-        )
+                                     width=40,
+                                     font=('Futura Gabriola Garamond', 10)
+                                     )
         self.entry_phone.bind("<KeyRelease>", CB.format_number)
         self.label_email = ttk.Label(self.frame_edit,
-            text='Email'
-        )
+                                     text='Email'
+                                     )
         self.entry_email = ttk.Entry(self.frame_edit,
-            width=40,
-            font=('Futura Gabriola Garamond', 10)
-        )
+                                     width=40,
+                                     font=('Futura Gabriola Garamond', 10)
+                                     )
         self.button_save = Button(self.frame_edit,
-            text='Salvar',
-            bg='#19c406',
-            fg='white',
-            command=lambda: CB.save_changes(),
-            cursor='hand2'
-        )
+                                  text='Salvar',
+                                  bg='#19c406',
+                                  fg='white',
+                                  command=lambda: CB.save_changes(),
+                                  cursor='hand2'
+                                  )
         self.button_cancel = Button(self.frame_edit,
-            text='Cancelar',
-            bg='#f50000',
-            fg='white',
-            command=lambda: CB.return_profile(),
-            cursor='hand2'
-        )
-
+                                    text='Cancelar',
+                                    bg='#f50000',
+                                    fg='white',
+                                    command=lambda: CB.return_profile(),
+                                    cursor='hand2'
+                                    )
         self.styles = ttk.Style()
         self.styles.configure('.', background=PRIMARY_BG_COLOR)
         self.styles.configure('TLabel', font=('Futura Gabriola Garamond', 10), foreground=DEFAULT_FG_COLOR)
@@ -168,24 +167,28 @@ class WindowEdit:
 class ExportWindow:
     def __init__(self, root: Tk, id: int) -> None:
         self.id = id
+        self.CB = tkp.CommandsButtons(self.id, root)
 
         self.frame_export = Frame(root,
-            bg=PRIMARY_BG_COLOR,
-            class_='FrameExport'
-        )
-
-        self.button_export_excel = ttk.Button(self.frame_export,
-            text='Exportar dados para Excel', 
-            command=lambda: tkp.CommandsButtons(self.id, root).export_to_excel()
-        )
+                                  bg=PRIMARY_BG_COLOR,
+                                  class_='FrameExport'
+                                  )
+        self.button_export_excel = ttk.Button(self.frame_export, 
+                                              text='Exportar dados para Excel',
+                                              command=lambda: self.CB.export_to_excel()
+                                              )
         self.button_export_pdf = ttk.Button(self.frame_export,
-            text='Exportar dados para PDF', 
-            command=lambda: tkp.CommandsButtons(self.id, root).export_to_pdf()
-        )
-
+                                            text='Exportar dados para PDF',
+                                            command=lambda: self.CB.export_to_pdf()
+                                            )
+        self.button_return = ttk.Button(self.frame_export,
+                                        text='Retornar',
+                                        command=lambda: self.CB.open_options()
+                                        )
         self.frame_export.grid(row=0, column=1, sticky=NS)
         self.button_export_excel.grid(row=0, column=0, padx=(20, 20), pady=(20,10), sticky=EW)
-        self.button_export_pdf.grid(row=1, column=0, padx=(20, 20), pady=(0,20), sticky=EW)
+        self.button_export_pdf.grid(row=1, column=0, padx=(20, 20), sticky=EW)
+        self.button_return.grid(row=2, column=0, padx=(20,20), pady=(0,20), sticky=EW)
 
 
 
