@@ -36,49 +36,48 @@ class WidgetsLogin:
         self.root = master
 
         self.label_login = ttk.Label(self.root, 
-            text='LOGIN', 
-            font=('Futura Gabriola Garamond', 18, "bold"),
-            width=15,
-            anchor=CENTER,
-        )
+                                     text='LOGIN', 
+                                     font=('Futura Gabriola Garamond', 18, "bold"),
+                                     width=15,
+                                     anchor=CENTER,
+                                     )
         self.label_username = ttk.Label(self.root, 
-            text='USUÁRIO', 
-            font=('Futura Gabriola Garamond', 12)
-        )
+                                        text='USUÁRIO', 
+                                        font=('Futura Gabriola Garamond', 12)
+                                        )
         self.entry_username = ttk.Entry(self.root
-        )
+                                        )
         self.label_password = ttk.Label(self.root, 
-            text='SENHA', 
-            font=('Futura Gabriola Garamond', 12)
-        )
+                                        text='SENHA', 
+                                        font=('Futura Gabriola Garamond', 12)
+                                        )
         self.entry_password = ttk.Entry(self.root,
-            show='*'
-        )
+                                        show='*'
+                                        )
         self.value_checkbox = BooleanVar()
         self.checkbox_hidden_pwd = Checkbutton(self.root,
-            background=PRIMARY_BG_COLOR,
-            foreground=DEFAULT_FG_COLOR,
-            activebackground=PRIMARY_BG_COLOR,
-            activeforeground=DEFAULT_FG_COLOR,
-            selectcolor=PRIMARY_BG_COLOR,
-            text='Mostrar senha',
-            takefocus=False,
-            variable=self.value_checkbox,
-            command=lambda: self._hidden_show_pwd()
-        )
+                                               background=PRIMARY_BG_COLOR,
+                                               foreground=DEFAULT_FG_COLOR,
+                                               activebackground=PRIMARY_BG_COLOR,
+                                               activeforeground=DEFAULT_FG_COLOR,
+                                               selectcolor=PRIMARY_BG_COLOR,
+                                               text='Mostrar senha',
+                                               takefocus=False,
+                                               variable=self.value_checkbox,
+                                               command=lambda: self._hidden_show_pwd()
+                                               )
         self.button_ok = ttk.Button(self.root, 
-            text='ENTRAR',
-            command=lambda: AcessDB(self.root).query_name(self.entry_username.get(), self.entry_password.get()),
-            takefocus=False,
-            cursor='hand2'
-        )
+                                    text='ENTRAR',
+                                    command=lambda: AcessDB(self.root).query_name(self.entry_username.get(), self.entry_password.get()),
+                                    takefocus=False,
+                                    cursor='hand2'
+                                    )
         self.button_exit = ttk.Button(self.root,
-            text='SAIR',
-            command=lambda: self.close_app(),
-            takefocus=False,
-            cursor='hand2'
-        )
-
+                                      text='SAIR',
+                                      command=lambda: self.close_app(),
+                                      takefocus=False,
+                                      cursor='hand2'
+                                      )
         self.label_login.grid(row=0, column=0, columnspan=3, sticky=EW,padx=(50,50), pady=(10, 10))
         self.label_username.grid(row=1, column=0, columnspan=3, sticky=W, padx=(50,50))
         self.entry_username.grid(row=2, column=0, columnspan=3, sticky=EW, padx=(50,50), pady=(0, 10))
