@@ -1,4 +1,5 @@
-from selenium.webdriver import Edge
+from selenium.webdriver import Edge, Chrome, Firefox
+from selenium.webdriver.common.action_chains import ActionChains
 from time import sleep
 import subprocess
 import os
@@ -23,7 +24,7 @@ class CommandsButtons:
             id_user (int): ID user to load your profile.
             master (Tk): Root window
         """
-        globals()["master"] = master
+        globals()['master'] = master
         globals()["id_user"] = id_user
         self.conn = mysql.connector.connect(host='localhost', user='root', passwd='', database='acaiteria', port='3306')
         self.cursor = self.conn.cursor()
@@ -53,7 +54,7 @@ class CommandsButtons:
     def edit_datas(self) -> None:
         """Open the editing frame 
         """
-        datas_profile = CommandsButtons(globals()["id_user"], globals()["master"]).query_profile()
+        datas_profile = CommandsButtons(globals()["id_user"], globals()['master']).query_profile()
         name = datas_profile['name'].title()
         phone = list(datas_profile['nr_phone'])
         insert_char = ((0, '('), (3, ')'), (4, ' '), (6, ' '), (11, '-'))
@@ -65,13 +66,13 @@ class CommandsButtons:
         
         #CREATE WINDOW's EDIT
         CommandsButtons.__switch_pages('FrameOption')
-        if globals()["master"].master != None:
+        if globals()['master'].master != None:
             try:
-                win_edit = ow.WindowEdit(globals()["id_user"], globals()["master"].master)
+                win_edit = ow.WindowEdit(globals()["id_user"], globals()['master'].master)
             except:
-                win_edit = ow.WindowEdit(globals()["id_user"], globals()["master"])
+                win_edit = ow.WindowEdit(globals()["id_user"], globals()['master'])
         else:
-            win_edit = ow.WindowEdit(globals()["id_user"], globals()["master"])
+            win_edit = ow.WindowEdit(globals()["id_user"], globals()['master'])
         entrys = globals()['entrys'] = win_edit.return_entrys()
         entry_name = entrys[0]
         entry_phone = entrys[1]
@@ -148,21 +149,21 @@ class CommandsButtons:
         """
         CommandsButtons.__switch_pages('FrameEdit')
         CommandsButtons.__switch_pages('FrameOption')
-        if globals()["master"].master != None:
+        if globals()['master'].master != None:
             try:
-                pw.WindowLevelOne(globals()["master"].master, globals()["id_user"])
+                pw.WindowLevelOne(globals()['master'].master, globals()["id_user"])
             except:
-                pw.WindowLevelOne(globals()["master"], globals()["id_user"])
+                pw.WindowLevelOne(globals()['master'], globals()["id_user"])
         else:
-            pw.WindowLevelOne(globals()["master"], globals()["id_user"])
+            pw.WindowLevelOne(globals()['master'], globals()["id_user"])
 
     def return_login(self) -> None:
         """Destroy profile window and open login window
         """
         try:
-            globals()["master"].master.destroy()
+            globals()['master'].master.destroy()
         except:
-            globals()["master"].destroy()
+            globals()['master'].destroy()
 
         lw.MainLogin()
     
@@ -171,21 +172,21 @@ class CommandsButtons:
         """
         CommandsButtons.__switch_pages('FrameProfile')
         CommandsButtons.__switch_pages('FrameEdit')
-        if globals()["master"].master != None:
+        if globals()['master'].master != None:
             try:
-                ow.WindowOption(globals()["id_user"], globals()["master"].master)
+                ow.WindowOption(globals()["id_user"], globals()['master'].master)
             except:
-                ow.WindowOption(globals()["id_user"], globals()["master"])
+                ow.WindowOption(globals()["id_user"], globals()['master'])
         else:
-            ow.WindowOption(globals()["id_user"], globals()["master"])
+            ow.WindowOption(globals()["id_user"], globals()['master'])
 
     def open_sheet(self) -> None:
         """Destroy profile window and open sheet window
         """
         try:
-            globals()["master"].master.destroy()
+            globals()['master'].master.destroy()
         except:
-            globals()["master"].destroy()
+            globals()['master'].destroy()
 
         sw.MainApp(globals()["id_user"])
     
@@ -194,9 +195,9 @@ class CommandsButtons:
         """
         if askyesno('FAZER LOGOUT', f'Deseja realmente fechar do programa?'):
             try:
-                globals()["master"].master.destroy()
+                globals()['master'].master.destroy()
             except:
-                globals()["master"].destroy()
+                globals()['master'].destroy()
 
     def __switch_pages(frame_class: Frame) -> None:
         """Forget grid of a frame before create the new frame
@@ -205,12 +206,12 @@ class CommandsButtons:
             frame_class (tk.Frame): Frame that will destroy
         """
         try:
-            for w in globals()["master"].master.children.values():
+            for w in globals()['master'].master.children.values():
                 if w.winfo_class() == frame_class:
                     for wid in w.children.values():
                         wid.grid_forget()
         except:
-            for w in globals()["master"].children.values():
+            for w in globals()['master'].children.values():
                 if w.winfo_class() == frame_class:
                     for wid in w.children.values():
                         wid.grid_forget()
@@ -226,48 +227,71 @@ class CommandsButtons:
     def export_window(self):
         CommandsButtons.__switch_pages('FrameExport')
         CommandsButtons.__switch_pages('FrameOption')
-        if globals()["master"].master != None:
+        if globals()['master'].master != None:
             try:
-                ow.ExportWindow(globals()["master"].master, globals()["id_user"])
+                ow.ExportWindow(globals()['master'].master, globals()["id_user"])
             except:
-                ow.ExportWindow(globals()["master"], globals()["id_user"])
+                ow.ExportWindow(globals()['master'], globals()["id_user"])
         else:
-            ow.ExportWindow(globals()["master"], globals()["id_user"])
+            ow.ExportWindow(globals()['master'], globals()["id_user"])
         
     def export_to_excel(self):
         path = f"{askdirectory()}/comandas.xlsx"
-        showinfo('EXPORTAÇÃO EM ANDAMENTO', 'A EXPORTAÇÃO ESTÁ EM ANDAMENTO.')
+        showinfo('Exportação em andamento!', 'Começamos a exportação dos dados. Agora é só relaxar, assim que terminarmos abriremos o arquivo!')
         ds.DataFrameToExcel(ds.ManipulationDB().create_dataframe('name'), path).export_excel()
+        subprocess.Popen(r'explorer C:\Users\USER\OneDrive\Documentos\Programação\Python\Projetos\Comandas-Açai\Dashboard\comandas.xlsx')
 
     def export_to_pdf(self):
         showinfo('Exportação em andamento!', 'Começamos a exportação dos dados. Agora é só relaxar, assim que terminarmos abriremos o arquivo!')
-        web = Edge()
+        
+        ds.DataFrameToExcel(ds.ManipulationDB().create_dataframe('name'), r'C:\Users\USER\OneDrive\Documentos\Programação\Python\Projetos\Comandas-Açai\Dashboard\comandas.xlsx').export_excel()
+        
+        #Open Power BI login page
+        try:
+            web = Chrome()
+        except:
+            try:
+                web = Firefox()
+            except:
+                web = Edge() 
+                 
         web.get('https://app.powerbi.com/groups/me/list?noSignUpCheck=1&cmpid=pbi-home-body-snn-signin')
 
-        email = 'email@company'
-        password = 'ABC123'
-
-        web.find_element_by_xpath('//*[@id="i0116"]').send_keys(email)
+        self.cursor.execute(f'''SELECT E.email, LE.senha_usuario
+                            FROM empregados E
+                            INNER JOIN login_empregados LE
+                            ON E.id = LE.id_empregado
+                            WHERE E.id = {globals()["id_user"]}''')
+        login = list(i for i in self.cursor.fetchall())[0]
+        
+        #Input email
+        web.find_element_by_xpath('//*[@id="i0116"]').send_keys(login[0])
         web.find_element_by_xpath('//*[@id="idSIButton9"]').click()
         sleep(2)
 
-        web.find_element_by_xpath('//*[@id="i0118"]').send_keys(password)
+        #Input password
+        web.find_element_by_xpath('//*[@id="i0118"]').send_keys(login[1])
         web.find_element_by_xpath('//*[@id="idSIButton9"]').click()
         sleep(2)
 
+        #I don't want to keep connected
+        while len(web.find_elements_by_id('idBtn_Back')) < 1:
+            sleep(1)        
         web.find_element_by_xpath('//*[@id="idBtn_Back"]').click()
-
+            
+        #Export's steps
         web.find_element_by_xpath('//*[@id="artifactContentList"]/div[1]/div[1]/div[2]/span/a').click()
-
         while len(web.find_elements_by_id('exportMenuBtn')) < 1:
             sleep(1)
-
+        web.find_element_by_xpath('//*[@id="reportAppBarRefreshBtn"]').click()
+        sleep(10)
         web.find_element_by_xpath('//*[@id="exportMenuBtn"]/span').click()
         sleep(2)
         web.find_element_by_xpath('//*[@id="mat-menu-panel-11"]/div/button[3]').click()
         sleep(2)
         web.find_element_by_xpath('//*[@id="okButton"]').click()
 
+        #Open PDF
         while True:
             try:
                 os.rename(r'C:\Users\USER\Downloads\AnaliseDados.pdf', r'C:\Users\USER\OneDrive\Documentos\Programação\Python\Projetos\Comandas-Açai\Dashboard\AnaliseDados.pdf')
@@ -275,4 +299,3 @@ class CommandsButtons:
                 break
             except:
                 sleep(10)
-    

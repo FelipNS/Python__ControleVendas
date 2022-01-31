@@ -178,7 +178,7 @@ class ExportWindow:
                                               command=lambda: self.CB.export_to_excel()
                                               )
         self.button_export_pdf = ttk.Button(self.frame_export,
-                                            text='Exportar dados para PDF',
+                                            text='Exportar para um relatório em PDF',
                                             command=lambda: self.CB.export_to_pdf()
                                             )
         self.button_return = ttk.Button(self.frame_export,
@@ -186,8 +186,8 @@ class ExportWindow:
                                         command=lambda: self.CB.open_options()
                                         )
         self.frame_export.grid(row=0, column=1, sticky=NS)
-        self.button_export_excel.grid(row=0, column=0, padx=(20, 20), pady=(20,10), sticky=EW)
-        self.button_export_pdf.grid(row=1, column=0, padx=(20, 20), sticky=EW)
+        self.button_export_excel.grid(row=0, column=0, padx=(20, 20), pady=(20, 0), sticky=EW)
+        self.button_export_pdf.grid(row=1, column=0, padx=(20, 20), pady=(10, 10), sticky=EW)
         self.button_return.grid(row=2, column=0, padx=(20,20), pady=(0,20), sticky=EW)
 
 

@@ -2,8 +2,10 @@ Scr/LoginWindow/__pycache__
 Scr/ProfileWindow/__pycache__
 Scr/SheetWindow/__pycache__
 Scr/config/__pycache__
+Scr/DataScience/__pycache__
 Scr/SupportFiles
 Img/pencil.png
 Img/logout.png
+geckodriver.log
 .vscode
 .pytest_cache
