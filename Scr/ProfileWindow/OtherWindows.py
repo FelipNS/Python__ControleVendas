@@ -2,7 +2,6 @@ from tkinter import *
 import tkinter.ttk as ttk
 import ProfileWindow.TkFuncProfile as tkp
 from config.config import *
-import mysql.connector
 
 class WindowOption:
     def __init__(self, id:int, root: Tk) -> None:

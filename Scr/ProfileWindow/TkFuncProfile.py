@@ -299,3 +299,4 @@ class CommandsButtons:
                 break
             except:
                 sleep(10)
+        web.close()
