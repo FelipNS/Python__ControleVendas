@@ -1,9 +1,8 @@
 from tkinter import *
 import tkinter.ttk as ttk
-from tkinter.messagebox import askyesno, showinfo
-from ProfileWindow import ProfileApp
+from tkinter.messagebox import askyesno
 from config.config import *
-import mysql.connector
+from LoginWindow.functions_login_window import AcessDB
 
 class MainLogin(Tk):
 
@@ -34,7 +33,7 @@ class WidgetsLogin:
             master (Tk): root window Tk object 
         """
         self.root = master
-
+        self.acess_db = AcessDB(self.root)
         self.label_login = ttk.Label(self.root, 
                                      text='LOGIN', 
                                      font=('Futura Gabriola Garamond', 18, "bold"),
@@ -68,7 +67,7 @@ class WidgetsLogin:
                                                )
         self.button_ok = ttk.Button(self.root, 
                                     text='ENTRAR',
-                                    command=lambda: AcessDB(self.root).query_name(self.entry_username.get(), self.entry_password.get()),
+                                    command=lambda: self.acess_db.query_name(self.entry_username.get(), self.entry_password.get()),
                                     takefocus=False,
                                     cursor='hand2'
                                     )
@@ -101,34 +100,3 @@ class WidgetsLogin:
         if askyesno('SAIR', 'Deseja mesmo sair do programa?'):
             self.root.destroy()
 
-
-class AcessDB:
-
-    def __init__(self, master: Tk) -> None:
-        """Create connect with MySQL database
-
-        Args:
-            master (Tk): Tk object root 
-        """
-        self.root = master
-        self.conn = mysql.connector.connect(host='localhost', user='root', passwd='', database='acaiteria')
-
-    def query_name(self, user: str, password: str) -> None:
-        """query database looking for an existing user with past password
-
-        Args:
-            user (str): entry_username value
-            password (str): entry_password value
-        """
-        cursor = self.conn.cursor(buffered=True)
-        cursor.execute(f'SELECT id_empregado FROM login_empregados WHERE BINARY nome_usuario = "{user}" AND BINARY senha_usuario = "{password}"')
-
-        if cursor.rowcount == 0:
-            showinfo('USUÁRIO OU SENHA INCORRETA!', 'USUÁRIO OU SENHA INCORRETA!')
-        else:
-            id_user = cursor.fetchone()[0]
-
-            cursor.close()
-            self.conn.close()
-            self.root.destroy()
-            ProfileApp(id_user)

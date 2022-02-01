@@ -1,5 +1,4 @@
 from tkinter import *
-from tkinter.messagebox import showwarning
 import tkinter.ttk as ttk
 import SheetWindow.MongoFuncSheet as mf
 import SheetWindow.TkFuncSheet as tkf
@@ -41,6 +40,7 @@ class Header:
             master (Tk): Root window
         """
         self.root = master
+        self.mong = mf.MongoFunctions()
 
         self.frame_header = ttk.Frame(self.root, 
                                       width=130, 
@@ -59,7 +59,7 @@ class Header:
                                           style='right.TLabel'
                                           )
         self.combobox_combo_name = ttk.Combobox(self.frame_header, 
-                                                values=mf.MongoFunctions().read_item('combos', 'dadosGerais'), 
+                                                values=self.mong.read_item('combos', 'dadosGerais'), 
                                                 width=22
                                                 )
         self.label_payment_option = ttk.Label(self.frame_header, 
@@ -67,7 +67,7 @@ class Header:
                                               style='left.TLabel'
                                               )
         self.combobox_payment_option = ttk.Combobox(self.frame_header, 
-                                                    values=mf.MongoFunctions().read_item('payment_option', 'dadosGerais'), 
+                                                    values=self.mong.read_item('payment_option', 'dadosGerais'), 
                                                     width=22
                                                     )
         self.label_price = ttk.Label(self.frame_header,
@@ -83,7 +83,7 @@ class Header:
                                     style='left.TLabel'
                                     )
         self.combobox_size = ttk.Combobox(self.frame_header, 
-                                          values=mf.MongoFunctions().read_item('size', 'dadosGerais'), 
+                                          values=self.mong.read_item('size', 'dadosGerais'), 
                                           width=22
                                           )
         self.label_neighborhood = ttk.Label(self.frame_header, 
@@ -91,7 +91,7 @@ class Header:
                                             style='right.TLabel'
                                             )
         self.combobox_neighborhood = ttk.Combobox(self.frame_header, 
-                                                  values=mf.MongoFunctions().read_item('neighborhood', 'dadosGerais'), 
+                                                  values=self.mong.read_item('neighborhood', 'dadosGerais'), 
                                                   width=22
                                                   )
         self.frame_header.grid(row=0, rowspan=4, column=0, columnspan=5, padx=(20,20), pady=(20,20))
@@ -121,7 +121,7 @@ class Additionals:
 
         for i in range(0,len(self.additionals_type)):
             cur_type =self.additionals_type[i]
-            self.list_itens = mf.MongoFunctions().read_item(cur_type, 'adicionais')
+            self.list_itens = self.mong.read_item(cur_type, 'adicionais')
             match i:
                 case 0:
                     k = 0
@@ -172,6 +172,7 @@ class Additionals:
     
 class ButtonAndObs(Header, Additionals):
 
+    
     def __init__(self, master: Tk, id_user) -> None:
         """Create buttons and textbox frame
 
@@ -181,14 +182,22 @@ class ButtonAndObs(Header, Additionals):
         """
         Header.__init__(self, master)
         Additionals.__init__(self, master)
-        self.id_user = id_user
+        self.command = tkf.CommandButtons(window=self.root, id_user=id_user)
+        
         self.frame_buttons = ttk.Frame(self.root)
         self.button_ok = Button(self.frame_buttons, 
                                 text='SALVAR', 
                                 width=15, 
                                 height=2,
                                 background='lime',
-                                command=lambda: self.send_data(),
+                                command=lambda: self.command.send_data(self.entry_sheet_number, 
+                                                                       self.combobox_combo_name, 
+                                                                       self.combobox_payment_option, 
+                                                                       self.entry_price, 
+                                                                       self.combobox_size, 
+                                                                       self.combobox_neighborhood, 
+                                                                       self.textbox_obs,
+                                                                       self.json_listbox()),
                                 cursor='hand2'
                                 )
         self.button_close = Button(self.frame_buttons, 
@@ -196,7 +205,7 @@ class ButtonAndObs(Header, Additionals):
                                    width=15, 
                                    height=2, 
                                    background='red',
-                                   command=lambda: tkf.CommandButtons(window=self.root).close_window(self.id_user),
+                                   command=lambda: self.command.close_window(),
                                    cursor='hand2'
                                    )
         self.button_clear = Button(self.frame_buttons,
@@ -204,7 +213,7 @@ class ButtonAndObs(Header, Additionals):
                                    width=15, 
                                    height=2, 
                                    background='yellow',
-                                   command=lambda: tkf.CommandButtons(window=self.root).clear_widgets(),
+                                   command=lambda: self.command.clear_widgets(),
                                    cursor='hand2'
                                    )
         self.label_obs = LabelFrame(self.frame_buttons, 
@@ -224,66 +233,14 @@ class ButtonAndObs(Header, Additionals):
         self.button_close.grid(row=1, column=2, padx=(0, 10), pady=(0,20))
         self.label_obs.grid(row=0, column=0, columnspan=3, padx=(0, 10), pady=(0,20))
         self.textbox_obs.grid(row=0, column=0, rowspan=11)
+        
+    def json_listbox(self):
+        json_datas = {}
+        for i in self.additionals_type:
+            json_datas[i] = self.__create_dict_additionals(globals()[f'listbox_{i}'])
+        print(json_datas)
+        return json_datas
     
-    def send_data(self) -> None:
-        """Send data to save database
-        """
-        json_datas = self.__create_json(self.entry_sheet_number, self.combobox_combo_name, self.combobox_payment_option, self.entry_price, self.combobox_size, self.combobox_neighborhood, self.textbox_obs)
-        if json_datas != None:
-            for i in self.additionals_type:
-                json_datas[i] = self.__create_dict_additionals(globals()[f'listbox_{i}'])
-            tkf.CommandButtons(window=self.root).save_sheet(json_datas)
-    
-    def __create_json(self, number_sheet: ttk.Entry, combo: ttk.Combobox, payment_method: ttk.Combobox, price: ttk.Entry, size: ttk.Combobox, neighborhood: ttk.Combobox, obs: Text) -> dict:
-        """Format the data in json file
-
-        Args:
-            number_sheet (ttk.Entry): Value entry_sheet_number
-            combo (ttk.Combobox): Value combobox_combo_name
-            payment_method (ttk.Combobox): Value combobox_payment_option
-            price (ttk.Entry): Value entry_price
-            size (ttk.Combobox): Value combobox_size
-            neighborhood (ttk.Combobox): Value entry_neighborhood
-            obs (Text): Value textbox_obs
-
-        Returns:
-            dict: Dict containing data sheet
-        """
-        if self.__is_empty(number_sheet, combo, payment_method, price, size, neighborhood):
-            showwarning('CAMPOS NÃO PREENCHIDOS', 'Exite um ou mais campos do cabeçalho em branco! Preencha-os e tente novamente.')
-        else:
-            json_sketch = {
-                "n_comanda": int(number_sheet.get()),
-                "combo": combo.get(),
-                "f_pagamento": payment_method.get(),
-                "preco": float(price.get()),
-                "tamanho": int(size.get().split(' ')[0]) if int(size.get().split(' ')[0]) != 1 else 1000,
-                "bairro": neighborhood.get(),
-                "obs": obs.get("1.0", END),
-                "seller": self.id_user
-            }
-            return json_sketch
-
-    def __is_empty(self, *args) -> bool:
-        """Verify if a widget is empty
-
-        Returns:
-            bool: Return true if one widget is empty
-        """
-        isEmpty = False
-        for i in args:
-            if i.get() == '':
-                isEmpty = True
-        return isEmpty
-
     def __create_dict_additionals(self, listbox_name: Listbox) -> list:
-        """Create a list containing the selecteds additionals
-
-        Args:
-            listbox_name (Listbox): Listbox
-
-        Returns:
-            list: Containing selecteds items
-        """
         list_temp = [listbox_name.get(i) for i in listbox_name.curselection()]
         return list_temp

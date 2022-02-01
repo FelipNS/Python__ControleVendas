@@ -1,18 +1,15 @@
 from selenium.webdriver import Edge, Chrome, Firefox
-from selenium.webdriver.common.action_chains import ActionChains
 from time import sleep
 import subprocess
 import os
 from tkinter import *
 from tkinter.messagebox import askyesno, showinfo
 from tkinter.filedialog import askdirectory
-import tkinter.ttk as ttk
 import mysql.connector
 from config.config import *
 import SheetWindow as sw
 import LoginWindow as lw
 import ProfileWindow as pw
-import ProfileWindow.OtherWindows as ow
 import DataScience as ds
 
 class CommandsButtons:
@@ -68,11 +65,11 @@ class CommandsButtons:
         CommandsButtons.__switch_pages('FrameOption')
         if globals()['master'].master != None:
             try:
-                win_edit = ow.WindowEdit(globals()["id_user"], globals()['master'].master)
+                win_edit = pw.WindowEdit(globals()["id_user"], globals()['master'].master)
             except:
-                win_edit = ow.WindowEdit(globals()["id_user"], globals()['master'])
+                win_edit = pw.WindowEdit(globals()["id_user"], globals()['master'])
         else:
-            win_edit = ow.WindowEdit(globals()["id_user"], globals()['master'])
+            win_edit = pw.WindowEdit(globals()["id_user"], globals()['master'])
         entrys = globals()['entrys'] = win_edit.return_entrys()
         entry_name = entrys[0]
         entry_phone = entrys[1]
@@ -174,11 +171,11 @@ class CommandsButtons:
         CommandsButtons.__switch_pages('FrameEdit')
         if globals()['master'].master != None:
             try:
-                ow.WindowOption(globals()["id_user"], globals()['master'].master)
+                pw.WindowOption(globals()["id_user"], globals()['master'].master)
             except:
-                ow.WindowOption(globals()["id_user"], globals()['master'])
+                pw.WindowOption(globals()["id_user"], globals()['master'])
         else:
-            ow.WindowOption(globals()["id_user"], globals()['master'])
+            pw.WindowOption(globals()["id_user"], globals()['master'])
 
     def open_sheet(self) -> None:
         """Destroy profile window and open sheet window
@@ -229,11 +226,11 @@ class CommandsButtons:
         CommandsButtons.__switch_pages('FrameOption')
         if globals()['master'].master != None:
             try:
-                ow.ExportWindow(globals()['master'].master, globals()["id_user"])
+                pw.ExportWindow(globals()['master'].master, globals()["id_user"])
             except:
-                ow.ExportWindow(globals()['master'], globals()["id_user"])
+                pw.ExportWindow(globals()['master'], globals()["id_user"])
         else:
-            ow.ExportWindow(globals()['master'], globals()["id_user"])
+            pw.ExportWindow(globals()['master'], globals()["id_user"])
         
     def export_to_excel(self):
         path = f"{askdirectory()}/comandas.xlsx"
