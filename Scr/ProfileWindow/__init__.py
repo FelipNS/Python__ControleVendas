@@ -26,14 +26,15 @@ class ProfileApp(Tk):
             background=SECOND_BG_COLOR,
             class_='FrameSideBar'
         )
-        img_logo = Image.open(r"C:\Users\USER\OneDrive\Documentos\Programação\Python\Projetos\Comandas-Açai\Img\logo.jpg")
+        img_logo = Image.open(r"Img\logo.jpg")
         img_logo = img_logo.resize((75, 43))
         img_tk_logo =  ImageTk.PhotoImage(img_logo)
         self.image_logo = ttk.Label(self.frame_sidebar,
                                     image=img_tk_logo,
                                     background=SECOND_BG_COLOR
                                     )
-        img_menu = Image.open(r"C:\Users\USER\OneDrive\Documentos\Programação\Python\Projetos\Comandas-Açai\Img\menu.jpg")
+        
+        img_menu = Image.open(r"Img\menu.jpg")
         img_menu = img_menu.resize((50, 50))
         img_tk_menu =  ImageTk.PhotoImage(img_menu)
         self.image_menu = ttk.Label(self.frame_sidebar,
@@ -41,7 +42,8 @@ class ProfileApp(Tk):
                                     background=SECOND_BG_COLOR,
                                     cursor='hand2'
                                     )
-        img_logout = Image.open(r"C:\Users\USER\OneDrive\Documentos\Programação\Python\Projetos\Comandas-Açai\Img\logout.jpg")
+        
+        img_logout = Image.open(r"Img\logout.jpg")
         img_logout = img_logout.resize((50, 50))
         img_tk_logout =  ImageTk.PhotoImage(img_logout)
         self.image_logout = ttk.Label(self.frame_sidebar,

@@ -23,7 +23,10 @@ class CommandsButtons:
         """
         globals()['master'] = master
         globals()["id_user"] = id_user
-        self.conn = mysql.connector.connect(host='localhost', user='root', passwd='', database='acaiteria', port='3306')
+        self.conn = mysql.connector.connect(host=DB_HOST,
+                                            user=DB_USER,
+                                            password=DB_PWD,
+                                            database=DB_NAME)
         self.cursor = self.conn.cursor()
 
     def query_profile(self) -> dict:
@@ -214,11 +217,8 @@ class CommandsButtons:
                         wid.grid_forget()
 
     def get_id_privilege_level(self):
-        conn = mysql.connector.connect(host='localhost', user='root', passwd='', database='acaiteria')
-        cursor = conn.cursor()
-
-        cursor.execute(f"SELECT id_previlegio FROM empregados WHERE id = {globals()['id_user']}")
-        id_prev = list(i for i in cursor)
+        self.cursor.execute(f"SELECT id_previlegio FROM empregados WHERE id = {globals()['id_user']}")
+        id_prev = list(i for i in self.cursor)
         return id_prev[0][0]
     
     def export_window(self):

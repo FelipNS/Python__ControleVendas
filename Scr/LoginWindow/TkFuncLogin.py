@@ -14,7 +14,10 @@ class AcessDB:
             master (Tk): Tk object root 
         """
         self.root = master
-        self.conn = mysql.connector.connect(host='localhost', user='root', passwd='', database='acaiteria')
+        self.conn = mysql.connector.connect(host=DB_HOST,
+                                            user=DB_USER,
+                                            password=DB_PWD,
+                                            database=DB_NAME)
 
     def query_name(self, user: str, password: str) -> None:
         """query database looking for an existing user with past password

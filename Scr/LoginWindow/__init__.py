@@ -2,7 +2,7 @@ from tkinter import *
 import tkinter.ttk as ttk
 from tkinter.messagebox import askyesno
 from config.config import *
-from LoginWindow.functions_login_window import AcessDB
+from LoginWindow.TkFuncLogin import AcessDB
 
 class MainLogin(Tk):
 

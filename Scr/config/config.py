@@ -1,7 +1,14 @@
+from dotenv import dotenv_values
+
 PRIMARY_BG_COLOR = '#282c34'
 SECOND_BG_COLOR = '#181a1f'
 DEFAULT_FG_COLOR = 'white'
 DEFAULT_WINDOW_POSITION = 'tk::PlaceWindow . center'
+
+DB_HOST = 'localhost'
+DB_USER = 'root'
+DB_NAME = 'acaiteria'
+DB_PWD = dotenv_values(".env")['DB_PWD']
 
 def center(win):
     """
