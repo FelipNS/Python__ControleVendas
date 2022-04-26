@@ -9,3 +9,5 @@ Img/logout.png
 geckodriver.log
 .vscode
 .pytest_cache
+PRIVILEGIOS.txt
+.env
